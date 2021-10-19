@@ -6,17 +6,13 @@ function App() {
   const [user, setUser] = useState({ name: "", email: "" });
   const [error, setError] = useState("");
 
-  const Login = (details) => {
-    console.log(details);
-  };
+  const login = (details) => console.log(details);
 
-  const Logout = (details) => {
-    console.log(details);
-  };
+  const logout = (details) => console.log(details);
 
   return (
     <div className="App">
-      <Loginform />
+      <Loginform login={login} error={error} />
     </div>
   );
 }
