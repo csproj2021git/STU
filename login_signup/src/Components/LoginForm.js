@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function Loginform({ login, error }) {
+function Loginform({ login, error, logCount }) {
   const [details, setDetails] = useState({ email: "", password: "" });
 
   const submitHandler = (e) => {
@@ -12,7 +12,6 @@ function Loginform({ login, error }) {
     <form onSubmit={submitHandler}>
       <div className="form-inner">
         <h2>Login</h2>
-        {/* Error! */}
         <div className="form-group">
           <label htmlFor="email">Email:</label>
           <input
@@ -37,6 +36,8 @@ function Loginform({ login, error }) {
         </div>
         <input type="submit" value="Login" />
       </div>
+      {error}
+      <div className="">{logCount > 3 && <a href="">Reset Password</a>}</div>
     </form>
   );
 }
