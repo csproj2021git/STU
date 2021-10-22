@@ -30,9 +30,6 @@ io.on("connection", (socket) => {
     socket.on("message", (message) => {
       io.to(roomId).emit("createMessage", message);
     });
-    // socket.on("disconnect", () => {
-    //   io.to(roomId).broadcast.emit("user-disconnected", userId);
-    // });
   });
 });
 server.listen(7678); // listen on some port
