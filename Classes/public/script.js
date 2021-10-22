@@ -126,3 +126,7 @@ const setPlayVideo = () => {
     `;
   document.querySelector(".main_video_button").innerHTML = html;
 };
+
+// socket.on("user-disconnect", (userId) => {
+//   console.log(userId);
+// });
