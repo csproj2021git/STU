@@ -20,7 +20,6 @@ navigator.mediaDevices
     myVideoStream = stream;
     addVideoStream(myVideo, stream); // add my video stream
     peer.on("call", (call) => {
-      console.log("someone is calling!");
       call.answer(stream);
       if (!peers[call.peer]) {
         connecToNewUser(call.peer, stream);
