@@ -40,6 +40,7 @@ navigator.mediaDevices
     });
     socket.on("createMessage", (message) => {
       $("ul").append(`<li class="message"><b>user</b><br/>${message}</li>`);
+      scrollToBottom();
     });
   });
 
@@ -126,7 +127,3 @@ const setPlayVideo = () => {
     `;
   document.querySelector(".main_video_button").innerHTML = html;
 };
-
-// socket.on("user-disconnect", (userId) => {
-//   console.log(userId);
-// });

@@ -86,6 +86,15 @@ video {
   font-size: 24px;
 }
 
+.chat_message {
+  background-color: #242324;
+  border-radius: 10px;
+  border-color: white;
+  outline: none;
+  color: white;
+  width: fit-content;
+  height: 75px;
+}
 .main_chat_window {
   flex-grow: 1;
   overflow-y: auto;
@@ -102,11 +111,11 @@ video {
 
 .unmute,
 .stop {
-  color: #90f;
+  color: red;
 }
 
 .main__header {
-  color: white;
+  color: #9900ff;
   list-style: none;
   padding: 5px;
 }
