@@ -28,7 +28,10 @@
 video {
   height: 250px;
   width: 300px;
-  object-fit: cover;
+  padding: 10px;
+  margin: 5px;
+  background-color: #330552;
+  background-blend-mode: exclusion;
 }
 
 .main_message_container {
@@ -92,7 +95,6 @@ video {
   border-color: white;
   outline: none;
   color: white;
-  width: fit-content;
   height: 75px;
 }
 .main_chat_window {

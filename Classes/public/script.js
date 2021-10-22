@@ -1,6 +1,7 @@
 const socket = io("/");
 const videoGrid = document.getElementById("videos_grid"); // get the element by id
 const myVideo = document.createElement("video"); // create video element
+const peers = {};
 myVideo.muted = true;
 var peer = new Peer(undefined, {
   path: "/peerjs",
@@ -19,15 +20,11 @@ navigator.mediaDevices
     myVideoStream = stream;
     addVideoStream(myVideo, stream); // add my video stream
     peer.on("call", (call) => {
+      console.log("someone is calling!");
       call.answer(stream);
-      const video = document.createElement("video");
-      call.on("stream", (userVideoStream) => {
-        addVideoStream(video, userVideoStream); // add user video stream
-      });
-    });
-
-    socket.on("user-connected", (userId) => {
-      setTimeout(connecToNewUser, 1000, userId, stream); // to success to answer
+      if (!peers[call.peer]) {
+        connecToNewUser(call.peer, stream);
+      }
     });
 
     // input value
@@ -43,6 +40,17 @@ navigator.mediaDevices
       $("ul").append(`<li class="message"><b>user</b><br/>${message}</li>`);
       scrollToBottom();
     });
+
+    //We are going to call the new userId
+    socket.on("user-connected", (userId) => {
+      setTimeout(connecToNewUser, 1000, userId, stream); // to success to answer
+    });
+
+    socket.on("user-disconnected", (userId) => {
+      if (peers[userId]) {
+        peers[userId].close();
+      }
+    });
   });
 
 peer.on("open", (id) => {
@@ -50,10 +58,15 @@ peer.on("open", (id) => {
 });
 
 const connecToNewUser = (userId, stream) => {
+  //We are calling new user and sending him our stream
   const call = peer.call(userId, stream);
+  peers[userId] = call;
   const video = document.createElement("video");
   call.on("stream", (userVideoStream) => {
     addVideoStream(video, userVideoStream);
+  });
+  call.on("close", () => {
+    video.remove();
   });
 };
 
@@ -81,10 +94,8 @@ const muteUnmute = () => {
     myVideoStream.getAudioTracks()[0].enabled = true;
   }
 };
-
 // mute our video
 const playStop = () => {
-  console.log("object");
   let enabled = myVideoStream.getVideoTracks()[0].enabled;
   if (enabled) {
     myVideoStream.getVideoTracks()[0].enabled = false;
