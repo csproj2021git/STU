@@ -28,7 +28,14 @@ io.on("connection", (socket) => {
     socket.join(roomId);
     socket.broadcast.to(roomId).emit("user-connected", userId); // emit the event from the server to the rest of the users in specific room
     socket.on("message", (message) => {
-      io.to(roomId).emit("createMessage", message);
+      let new_date = new Date();
+      var time_rn =
+        ("0" + new_date.getHours()).slice(-2) +
+        ":" +
+        ("0" + new_date.getMinutes()).slice(-2) +
+        ":" +
+        ("0" + new_date.getSeconds()).slice(-2);
+      io.to(roomId).emit("createMessage", message, time_rn);
     });
     socket.on("disconnect", () => {
       socket.broadcast.to(roomId).emit("user-disconnected", userId);

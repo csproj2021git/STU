@@ -3,6 +3,7 @@ const videoGrid = document.getElementById("videos_grid"); // get the element by 
 const myVideo = document.createElement("video"); // create video element
 const peers = {};
 myVideo.muted = true;
+let chat_off = false;
 var peer = new Peer(undefined, {
   path: "/peerjs",
   host: "/",
@@ -35,8 +36,18 @@ navigator.mediaDevices
         text.val("");
       }
     });
-    socket.on("createMessage", (message) => {
-      $("ul").append(`<li class="message"><b>user</b><br/>${message}</li>`);
+    socket.on("createMessage", (message, time_rn) => {
+      $("ul").append(`
+        <li class="message">
+          <b>user</b>
+          <br>
+          <div class="msg">
+            ${message}
+          </div>
+          <div class="msg_timestamp">
+            ${time_rn}
+          </div>
+        </li>`);
       scrollToBottom();
     });
 
@@ -74,6 +85,7 @@ const addVideoStream = (video, stream) => {
   video.addEventListener("loadedmetadata", () => {
     video.play();
   });
+  // document.createElement("image")
   videoGrid.append(video);
 };
 
@@ -95,6 +107,7 @@ const muteUnmute = () => {
 };
 // mute our video
 const playStop = () => {
+  console.log(myVideoStream.getVideoTracks());
   let enabled = myVideoStream.getVideoTracks()[0].enabled;
   if (enabled) {
     myVideoStream.getVideoTracks()[0].enabled = false;
@@ -137,4 +150,16 @@ const setPlayVideo = () => {
       <span>Play Video</span>
     `;
   document.querySelector(".main_video_button").innerHTML = html;
+};
+
+const chatOnChatOff = () => {
+  if (!chat_off) {
+    chat_off = true;
+    $(".main_left").css("flex", "1");
+    $(".main_right").css({ flex: "0", display: "none" });
+  } else {
+    chat_off = false;
+    $(".main_left").css("flex", "0.8");
+    $(".main_right").css({ flex: "0.2", display: "" });
+  }
 };
