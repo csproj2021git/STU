@@ -2,4 +2,8 @@
 
 STU - Hybrid Classes
 
-Not much here yet , stay tuned ;)
+To run video chat run:
+
+npm start ./classrooms/server.js
+login into port 7678
+;)

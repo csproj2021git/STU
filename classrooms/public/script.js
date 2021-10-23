@@ -1,16 +1,21 @@
 const socket = io("/");
-const videoGrid = document.getElementById("videos_grid"); // get the element by id
-const myVideo = document.createElement("video"); // create video element
+const videoGrid = document.getElementById("videos_grid");
+const myVideo = document.createElement("video");
 const peers = {};
 myVideo.muted = true;
-let chat_off = false;
+var chat_off = false;
+var myVideoStream;
 var peer = new Peer(undefined, {
   path: "/peerjs",
   host: "/",
   port: "7678",
 });
 
-let myVideoStream;
+//On start, we join classroom
+peer.on("open", (id) => {
+  socket.emit("join-room", ROOM_ID, id);
+});
+
 navigator.mediaDevices
   .getUserMedia({
     // access to the devices
@@ -51,11 +56,12 @@ navigator.mediaDevices
       scrollToBottom();
     });
 
-    //We are going to call the new userId
+    //When new user connects, we connect to him
     socket.on("user-connected", (userId) => {
       setTimeout(connecToNewUser, 1000, userId, stream); // to success to answer
     });
 
+    // When user disconnects, we disconnect from him
     socket.on("user-disconnected", (userId) => {
       if (peers[userId]) {
         peers[userId].close();
@@ -63,10 +69,7 @@ navigator.mediaDevices
     });
   });
 
-peer.on("open", (id) => {
-  socket.emit("join-room", ROOM_ID, id);
-});
-
+//Connecting to new user peer.
 const connecToNewUser = (userId, stream) => {
   //We are calling new user and sending him our stream
   const call = peer.call(userId, stream);
@@ -80,6 +83,7 @@ const connecToNewUser = (userId, stream) => {
   });
 };
 
+//Add stream into our own page
 const addVideoStream = (video, stream) => {
   video.srcObject = stream;
   video.addEventListener("loadedmetadata", () => {
@@ -89,6 +93,7 @@ const addVideoStream = (video, stream) => {
   videoGrid.append(video);
 };
 
+//Auto scroll down in chat
 const scrollToBottom = () => {
   var d = $(".main_chat_window");
   d.scrollTop(d.prop("scrollHeight"));
@@ -126,6 +131,7 @@ const setMuteButton = () => {
     `;
   document.querySelector(".main_mute_button").innerHTML = html;
 };
+
 // change the icon on click
 const setUnmuteButton = () => {
   const html = `
@@ -143,6 +149,7 @@ const setStopVideo = () => {
     `;
   document.querySelector(".main_video_button").innerHTML = html;
 };
+
 // change the icon on click
 const setPlayVideo = () => {
   const html = `
@@ -152,6 +159,7 @@ const setPlayVideo = () => {
   document.querySelector(".main_video_button").innerHTML = html;
 };
 
+//Close and open chat bar
 const chatOnChatOff = () => {
   if (!chat_off) {
     chat_off = true;
