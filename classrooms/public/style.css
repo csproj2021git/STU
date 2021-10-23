@@ -11,7 +11,7 @@
 
 /* width of all scrollbars */
 ::-webkit-scrollbar {
-  width: 1.5em;
+  width: 0.75em;
 }
 
 /* shape of track [circular in the ends] and change of color */
