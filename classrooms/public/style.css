@@ -135,12 +135,6 @@ video {
   min-width: 97.55px; /* Need to change to value from script - it needs to change due to screen size */
 }
 
-/* .msg_and_timestamp {
-  display: flex;
-  flex-direction: row;
-
-} */
-
 .msg_timestamp {
   text-align: right;
   padding-right: 35px;
