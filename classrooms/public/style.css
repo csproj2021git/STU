@@ -179,6 +179,6 @@ li {
 }
 
 .disconnect_message:hover {
-  opacity: 0.5
+  opacity: 0.5;
   padding: 10px;
 }
