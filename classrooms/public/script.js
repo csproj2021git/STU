@@ -1,9 +1,10 @@
 const socket = io("/");
 const videoGrid = document.getElementById("videos_grid");
 const myVideo = document.createElement("video");
+
 const peers = {};
 myVideo.muted = true;
-var chat_off = false;
+
 var myVideoStream;
 var peer = new Peer(undefined, {
   path: "/peerjs",
@@ -65,6 +66,7 @@ navigator.mediaDevices
     socket.on("user-disconnected", (userId) => {
       if (peers[userId]) {
         peers[userId].close();
+        dcPopup(userId)
       }
     });
   });
@@ -160,14 +162,37 @@ const setPlayVideo = () => {
 };
 
 //Close and open chat bar
+var chat_off = false;
 const chatOnChatOff = () => {
   if (!chat_off) {
     chat_off = true;
     $(".main_left").css("flex", "1");
-    $(".main_right").css({ flex: "0", display: "none" });
+    $(".main_right").css({ "flex": "0", "display": "none" });
   } else {
     chat_off = false;
     $(".main_left").css("flex", "0.8");
-    $(".main_right").css({ flex: "0.2", display: "" });
+    $(".main_right").css({ "flex": "0.2", "display": "" });
   }
 };
+
+let mainRightWidth = $(".main_right").width() + 10;
+let dcMessageTag = $(".disconnect_message")
+let start_opacity = parseFloat(dcMessageTag.css("opacity")) // Trying to get the initial opacity configured in the .css file.
+const dcPopup = (userId) => {
+  let dcMessageItself = $(".dc_msg_itself")
+  dcMessageTag.css({"right": String(mainRightWidth) + "px", "display": "block", "visibility": "visible", "opacity": start_opacity})
+  dcMessageItself.text(userId + " has disconnected");
+  setTimeout(function(tag) {
+    var opacity = start_opacity
+    const IntervalId = setInterval((tag) => {
+      opacity -= 0.1
+      if (opacity > 0) {
+        tag.css("opacity", String(opacity))
+      } else {
+        tag.css("opacity", 0)
+        tag.css({"display": "none", "visibility": "hidden"})
+        clearInterval(IntervalId)
+      }
+    }, 50, tag)
+  }, 1800, dcMessageTag)
+}

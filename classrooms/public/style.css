@@ -163,3 +163,22 @@ li {
   max-width: 25em;
   overflow-wrap: anywhere;
 }
+/* Need to do right attribute */
+.disconnect_message {
+  padding: 5px 10px;
+  width: auto;
+  height: auto;
+  top: 10px;
+  border-radius: 4px;
+  border-left: 8px solid #ffa502;
+  background: #ffdb9b;
+  opacity: 0.9;
+  position: absolute;
+  visibility: hidden;
+  text-align: center;
+}
+
+.disconnect_message:hover {
+  opacity: 0.5
+  padding: 10px;
+}
