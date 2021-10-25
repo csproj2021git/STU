@@ -45,10 +45,14 @@
                   <i class="fas fa-comment-alt"></i>
                   <span>Chat</span>
                </div>
+               <div onclick="shareButtonClicked()" class="main_controls_button">
+                  <i class="fas fa-external-link-alt" style="color:green"></i>
+                  <span class="share-screen" >Share Screen</span>
+               </div>
             </div>
-            <div class="main_controls_block">
+            <div onclick="leavingMeetingButtonClicked()" class="main_controls_block">
                <div class="main_controls_button">
-                  <span class="leave_meeting">Leave Meeting</span>
+                  <span class="leave_meeting" id="leave_button">Leave Meeting</span>
                </div>
             </div>
          </div>
@@ -60,14 +64,12 @@
          <div class="main_chat_window">
             <ul class="messages">
             </ul>
-
          </div>
          <div class="main__message_container">
             <input id="chat_message" class="chat_message" type="text" placeholder="Type text here...">
          </div>
       </div>
    </div>
-
    <div class="disconnect_message">
      <span class="dc_msg_itself">
      </span>

@@ -9,7 +9,7 @@ var myVideoStream;
 var peer = new Peer(undefined, {
   path: "/peerjs",
   host: "/",
-  port: "4534",
+  port: "3030",
 });
 
 //On start, we join classroom
@@ -175,9 +175,11 @@ const chatOnChatOff = () => {
   }
 };
 
+// display the user that disconnected:
 let mainRightWidth = $(".main_right").width() + 10;
 let dcMessageTag = $(".disconnect_message")
 let start_opacity = parseFloat(dcMessageTag.css("opacity")) // Trying to get the initial opacity configured in the .css file.
+
 const dcPopup = (userId) => {
   let dcMessageItself = $(".dc_msg_itself")
   dcMessageTag.css({"right": String(mainRightWidth) + "px", "display": "block", "visibility": "visible", "opacity": start_opacity})
@@ -195,4 +197,23 @@ const dcPopup = (userId) => {
       }
     }, 50, tag)
   }, 1800, dcMessageTag)
+}
+
+
+const leavingMeetingButtonClicked = () => {  
+  console.log("User disconnected")
+  location.href = "leaving_the_room.html"            // redirect and come back to home page!
+}
+
+// share screen:
+const shareButtonClicked = () => {
+  navigator.mediaDevices.getDisplayMedia({ cursor: true })
+  .then((mediaStream) => {
+    var video = document.querySelector('video');
+    video.srcObject = mediaStream;
+    video.onloadedmetadata = (e) => {
+      video.play();
+      getUserMediaSuccess(video.srcObject)
+    };
+  })
 }
