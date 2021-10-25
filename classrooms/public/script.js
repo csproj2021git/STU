@@ -9,7 +9,7 @@ var myVideoStream;
 var peer = new Peer(undefined, {
   path: "/peerjs",
   host: "/",
-  port: "7678",
+  port: "4534",
 });
 
 //On start, we join classroom

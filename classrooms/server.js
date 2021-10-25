@@ -42,4 +42,4 @@ io.on("connection", (socket) => {
     });
   });
 });
-server.listen(7678); // listen on some port
+server.listen(4534); // listen on some port
