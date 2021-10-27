@@ -2,7 +2,9 @@
 
 STU - Hybrid Classes
 
-To app run:
+Make sure you have node.js and npm installed on device before running!
+
+To run the app:
 
     npm start ./classrooms/server.js
 
