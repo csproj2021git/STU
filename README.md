@@ -6,6 +6,6 @@ To run video chat run:
 
     npm start ./classrooms/server.js
 
-connect to localhost:7678
+connect to localhost:3030
 
 ;)
