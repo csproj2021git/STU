@@ -2,7 +2,7 @@
 
 STU - Hybrid Classes
 
-To run video chat run:
+To app run:
 
     npm start ./classrooms/server.js
 
