@@ -7,7 +7,7 @@ var myVideoStream;
 var peer = new Peer(undefined, {
   path: "/peerjs",
   host: "/",
-  port: "3030",
+  port: "3000",
 });
 
 //On start, we join classroom
@@ -187,16 +187,16 @@ const leavingMeetingButtonClicked = () => {
 
 // share screen:
 const shareButtonClicked = () => {
-  navigator.mediaDevices
-    .getDisplayMedia({ cursor: true })
-    .then((mediaStream) => {
-      var video = document.querySelector("video");
-      video.srcObject = mediaStream;
-      video.onloadedmetadata = (e) => {
-        video.play();
-        getUserMediaSuccess(video.srcObject);
-      };
-    });
+  // navigator.mediaDevices
+  //   .getDisplayMedia({ cursor: true })
+  //   .then((mediaStream) => {
+  //     var video = document.querySelector("video");
+  //     video.srcObject = mediaStream;
+  //     video.onloadedmetadata = (e) => {
+  //       video.play();
+  //       getUserMediaSuccess(video.srcObject);
+  //     };
+  //   });
 };
 
 // when press enter send message
