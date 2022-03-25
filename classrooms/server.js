@@ -4,11 +4,13 @@ const app = express();
 const server = require("http").Server(app); // server
 const { v4: uuidv4 } = require("uuid"); // for uniqe id
 const io = require("socket.io")(server); // socket for connection
+
 const { ExpressPeerServer } = require("peer"); // peer to peer = send stream from one to another
 const peerServer = ExpressPeerServer(server, {
   debug: true,
 });
-app.set("view engine", "ejs"); // embeded js
+
+app.set("view engine", "ejs"); // embedded js
 app.use(express.static("public"));
 app.use("/peerjs", peerServer); // using peer
 
@@ -35,9 +37,13 @@ io.on("connection", (socket) => {
         ("0" + new_date.getSeconds()).slice(-2);
       io.to(roomId).emit("createMessage", message, time_rn);
     });
+    socket.on("share", (roomId, userId) => {
+      socket.broadcast.to(roomId).emit("user-sharing", userId);
+    })
     socket.on("disconnect", () => {
       socket.broadcast.to(roomId).emit("user-disconnected", userId);
     });
   });
 });
-server.listen(3000); // listen on some port
+
+server.listen(3030); // listen on some port

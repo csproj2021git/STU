@@ -1,44 +1,100 @@
 const socket = io("/");
 const videoGrid = document.getElementById("videos_grid");
-const myVideoWindow = document.createElement("video");
+const myVideo = document.createElement("video");
 const peers = {};
-myVideoWindow.muted = true;
+const peers_share = {};
+const senders = {}
+myVideo.muted = true;
 var myVideoStream;
+let ID
+let ID_SHARE
+
 var peer = new Peer(undefined, {
   path: "/peerjs",
   host: "/",
-  port: "3000",
+  port: "3030",
 });
+
+var peer2 = new Peer(undefined, {
+  path: "/peerjs",
+  host: "/",
+  port: "3030",
+});
+
 
 //On start, we join classroom
 peer.on("open", (id) => {
+  ID = id
   socket.emit("join-room", ROOM_ID, id);
-  getVideoAudio();
 });
 
-function getVideoAudio() {
-  navigator.mediaDevices
-    .getUserMedia({
-      video: true,
-      audio: true,
-    })
-    .then((stream) => {
-      myVideoStream = stream;
-      addVideoStream(myVideoWindow, stream);
-    });
-}
-
-//Recieve request to connect to peer
-peer.on("call", (call) => {
-  call.answer(myVideoStream);
-  if (!peers[call.peer]) {
-    connecToNewUser(call.peer, myVideoStream);
-  }
+peer2.on("open", (id) => {
+  ID_SHARE = id
 });
 
-//Send new peer request to connect
-socket.on("user-connected", (userId) => {
-  setTimeout(connecToNewUser, 1000, userId, myVideoStream); // to success to answer
+
+navigator.mediaDevices.getUserMedia({
+  // access to the devices
+  video: true,
+  audio: true,
+}).then((stream) => {
+  myVideoStream = stream;
+  addVideoStream(myVideo, stream); // add my video stream
+  peer.on("call", (call) => {
+    call.answer(stream);
+    if (!peers[call.peer]) {
+      console.log("line 49 in call")
+      connecToNewUser(call.peer, stream);
+    }
+  });
+  // input value
+  let text = $("input");
+  // when press enter send message
+  $("html").keydown((e) => {
+    if (e.which === 13 && text.val().length !== 0) {
+      socket.emit("message", text.val());
+      text.val("");
+    }
+  });
+  socket.on("createMessage", (message, time_rn) => {
+    $("ul").append(`
+        <li class="message">
+          <b>user</b>
+          <br>
+          <div class="msg">
+            ${message}
+          </div>
+          <div class="msg_timestamp">
+            ${time_rn}
+          </div>
+        </li>`);
+    scrollToBottom();
+  });
+
+
+  socket.on("user-sharing", (user_id) => {
+    setTimeout(connecToNewUser, 1000, user_id, stream); // to success to answer
+  })
+
+  //When new user connects, we connect to him
+  socket.on("user-connected", (userId) => {
+    setTimeout(connecToNewUser, 1000, userId, stream); // to success to answer
+  });
+
+
+  // When user disconnects, we disconnect from him
+  socket.on("user-disconnected", (userId) => {
+    if (peers[userId]) {
+      peers[userId].close();
+      dcPopup(userId)
+    }
+    console.log(Object.keys(peers_share).length)
+    if (peers_share[userId]) {
+      peers_share[userId].close();
+      dcPopup(userId)
+    }
+
+  });
 });
 
 //Connecting to new user peer.
@@ -55,13 +111,13 @@ const connecToNewUser = (userId, stream) => {
   });
 };
 
+
 //Add stream into our own page
 const addVideoStream = (video, stream) => {
   video.srcObject = stream;
   video.addEventListener("loadedmetadata", () => {
     video.play();
   });
-  // document.createElement("image")
   videoGrid.append(video);
 };
 
@@ -96,38 +152,34 @@ const playStop = () => {
 
 // change the icon on click
 const setMuteButton = () => {
-  const html = `
+  document.querySelector(".main_mute_button").innerHTML = `
       <i class="fas fa-microphone"></i>
       <span>Mute</span>
     `;
-  document.querySelector(".main_mute_button").innerHTML = html;
 };
 
 // change the icon on click
 const setUnmuteButton = () => {
-  const html = `
+  document.querySelector(".main_mute_button").innerHTML = `
       <i class="unmute fas fa-microphone-slash"></i>
       <span>Unmute</span>
     `;
-  document.querySelector(".main_mute_button").innerHTML = html;
 };
 
 // change the icon on click
 const setStopVideo = () => {
-  const html = `
+  document.querySelector(".main_video_button").innerHTML = `
       <i class="fas fa-video"></i>
       <span>Stop Video</span>
     `;
-  document.querySelector(".main_video_button").innerHTML = html;
 };
 
 // change the icon on click
 const setPlayVideo = () => {
-  const html = `
+  document.querySelector(".main_video_button").innerHTML = `
     <i class="stop fas fa-video-slash"></i>
       <span>Play Video</span>
     `;
-  document.querySelector(".main_video_button").innerHTML = html;
 };
 
 //Close and open chat bar
@@ -136,98 +188,76 @@ const chatOnChatOff = () => {
   if (!chat_off) {
     chat_off = true;
     $(".main_left").css("flex", "1");
-    $(".main_right").css({ flex: "0", display: "none" });
+    $(".main_right").css({"flex": "0", "display": "none"});
   } else {
     chat_off = false;
     $(".main_left").css("flex", "0.8");
-    $(".main_right").css({ flex: "0.2", display: "" });
+    $(".main_right").css({"flex": "0.2", "display": ""});
   }
 };
 
 // display the user that disconnected:
 let mainRightWidth = $(".main_right").width() + 10;
-let dcMessageTag = $(".disconnect_message");
-let start_opacity = parseFloat(dcMessageTag.css("opacity")); // Trying to get the initial opacity configured in the .css file.
+let dcMessageTag = $(".disconnect_message")
+let start_opacity = parseFloat(dcMessageTag.css("opacity")) // Trying to get the initial opacity configured in the .css file.
 
 const dcPopup = (userId) => {
-  let dcMessageItself = $(".dc_msg_itself");
+  let dcMessageItself = $(".dc_msg_itself")
   dcMessageTag.css({
-    right: String(mainRightWidth) + "px",
-    display: "block",
-    visibility: "visible",
-    opacity: start_opacity,
-  });
+    "right": String(mainRightWidth) + "px",
+    "display": "block",
+    "visibility": "visible",
+    "opacity": start_opacity
+  })
   dcMessageItself.text(userId + " has disconnected");
-  setTimeout(
-    function (tag) {
-      var opacity = start_opacity;
-      const IntervalId = setInterval(
-        () => {
-          opacity -= 0.1;
-          if (opacity > 0) {
-            tag.css("opacity", String(opacity));
-          } else {
-            tag.css("opacity", 0);
-            tag.css({ display: "none", visibility: "hidden" });
-            clearInterval(IntervalId);
-          }
-        },
-        50,
-        tag
-      );
-    },
-    1800,
-    dcMessageTag
-  );
-};
+  setTimeout(function (tag) {
+    var opacity = start_opacity
+    const IntervalId = setInterval((tag) => {
+      opacity -= 0.1
+      if (opacity > 0) {
+        tag.css("opacity", String(opacity))
+      } else {
+        tag.css("opacity", 0)
+        tag.css({"display": "none", "visibility": "hidden"})
+        clearInterval(IntervalId)
+      }
+    }, 50, tag)
+  }, 1800, dcMessageTag)
+}
 
 const leavingMeetingButtonClicked = () => {
-  location.href = "leaving_the_room.html"; // redirect and come back to home page!
-};
+  console.log("User disconnected")
+  location.href = "leaving_the_room.html"            // redirect and come back to home page!
+}
 
 // share screen:
 const shareButtonClicked = () => {
-  // navigator.mediaDevices
-  //   .getDisplayMedia({ cursor: true })
-  //   .then((mediaStream) => {
-  //     var video = document.querySelector("video");
-  //     video.srcObject = mediaStream;
-  //     video.onloadedmetadata = (e) => {
-  //       video.play();
-  //       getUserMediaSuccess(video.srcObject);
-  //     };
-  //   });
-};
+  navigator.mediaDevices.getDisplayMedia({ video: true }).then((mediaStream) => {
+    var video = document.createElement("video");
+    video.srcObject = mediaStream;
+    video.onloadedmetadata = (e) => {
+      video.play()
+    };
+    videoGrid.append(video)
+    socket.emit("share", ROOM_ID, ID_SHARE);
 
-// when press enter send message
-$("html").keydown((e) => {
-  let text = $("input");
-  if (e.which == 13 && text.val().length !== 0) {
-    socket.emit("message", text.val());
-    text.val("");
-  }
-});
+    // On call- then answer
+    peer2.on("call", (call)=> {
+      console.log("peer is:", call)
+      call.answer(mediaStream);
+      peers_share[call.peer] = call
+      console.log(Object.keys(peers_share).length)
 
-// Message recieved event handler
-socket.on("createMessage", (message, time_rn) => {
-  $("ul").append(`
-    <li class="message">
-      <b>user</b>
-      <br>
-      <div class="msg">
-        ${message}
-      </div>
-      <div class="msg_timestamp">
-        ${time_rn}
-      </div>
-    </li>`);
-  scrollToBottom();
-});
-
-// When user disconnects, we disconnect from him
-socket.on("user-disconnected", (userId) => {
-  if (peers[userId]) {
-    peers[userId].close();
-    dcPopup(userId);
-  }
-});
+    })
+    // When user connected add the share stream to him
+    socket.on("user-connected", (userId) => {
+      setTimeout((userId, mediaStream) => {
+        console.log("sending stream")
+        //We are calling new user and sending him our stream
+        const call = peer2.call(userId, mediaStream);
+        console.log("call in 290", call)
+        peers[userId] = call;
+      }, 1000, userId, mediaStream);
+    });
+  })
+}
