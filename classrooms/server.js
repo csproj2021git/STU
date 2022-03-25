@@ -24,9 +24,14 @@ app.get("/:room", (req, res) => {
 });
 
 io.on("connection", (socket) => {
-  socket.on("join-room", (roomId, userId) => {
-    socket.join(roomId);
-    socket.broadcast.to(roomId).emit("user-connected", userId); // emit the event from the server to the rest of the users in specific room
+  socket.on("join-room", (roomId, userId, isPeer2) => {
+    if (isPeer2 === 0){
+      socket.join(roomId);
+    }else {
+      socket.join(roomId);
+      socket.broadcast.to(roomId).emit("user-connected", userId); // emit the event from the server to the rest of the users in specific room
+
+    }
     socket.on("message", (message) => {
       let new_date = new Date();
       var time_rn =

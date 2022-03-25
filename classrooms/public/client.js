@@ -25,11 +25,12 @@ var peer2 = new Peer(undefined, {
 //On start, we join classroom
 peer.on("open", (id) => {
   ID = id
-  socket.emit("join-room", ROOM_ID, id);
+  socket.emit("join-room", ROOM_ID, id, 1); // 1- peer
 });
 
 peer2.on("open", (id) => {
   ID_SHARE = id
+  socket.emit("join-room", ROOM_ID, id, 0); // 0- peer2
 });
 
 
@@ -81,6 +82,13 @@ navigator.mediaDevices.getUserMedia({
     setTimeout(connecToNewUser, 1000, userId, stream); // to success to answer
   });
 
+  // When user disconnects, we disconnect from him
+  socket.on("user-disconnected", (userId) => {
+    if (peers_share[userId]) {
+      peers_share[userId].close();
+      dcPopup(userId)
+    }
+  });
 
   // When user disconnects, we disconnect from him
   socket.on("user-disconnected", (userId) => {
@@ -88,12 +96,6 @@ navigator.mediaDevices.getUserMedia({
       peers[userId].close();
       dcPopup(userId)
     }
-    console.log(Object.keys(peers_share).length)
-    if (peers_share[userId]) {
-      peers_share[userId].close();
-      dcPopup(userId)
-    }
-
   });
 });
 
@@ -232,6 +234,7 @@ const leavingMeetingButtonClicked = () => {
 
 // share screen:
 const shareButtonClicked = () => {
+  // get display media
   navigator.mediaDevices.getDisplayMedia({ video: true }).then((mediaStream) => {
     var video = document.createElement("video");
     video.srcObject = mediaStream;
@@ -243,21 +246,22 @@ const shareButtonClicked = () => {
 
     // On call- then answer
     peer2.on("call", (call)=> {
-      console.log("peer is:", call)
       call.answer(mediaStream);
       peers_share[call.peer] = call
       console.log(Object.keys(peers_share).length)
-
     })
     // When user connected add the share stream to him
     socket.on("user-connected", (userId) => {
       setTimeout((userId, mediaStream) => {
-        console.log("sending stream")
         //We are calling new user and sending him our stream
         const call = peer2.call(userId, mediaStream);
-        console.log("call in 290", call)
         peers[userId] = call;
       }, 1000, userId, mediaStream);
     });
   })
+}
+
+// stop share:
+const stopShareButtonClicked = () => {
+
 }
