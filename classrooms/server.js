@@ -12,7 +12,7 @@ const peerServer = ExpressPeerServer(server, {
 
 app.set("view engine", "ejs"); // embedded js
 app.use(express.static("public"));
-app.use("/peerjs", peerServer); // using peer
+app.use("/peerjs", peerServer); // using peer and giving unique id!!!!
 
 app.get("/", (req, res) => {
   res.redirect(`/${uuidv4()}`); // redirect url
@@ -24,29 +24,33 @@ app.get("/:room", (req, res) => {
 });
 
 io.on("connection", (socket) => {
-  socket.on("join-room", (roomId, userId, isPeer2) => {
-    if (isPeer2 === 0){
-      socket.join(roomId);
-    }else {
-      socket.join(roomId);
-      socket.broadcast.to(roomId).emit("user-connected", userId); // emit the event from the server to the rest of the users in specific room
-
-    }
+  socket.on("join-room", (roomId, userId, shareId) => {
+    socket.join(roomId);
+    socket.broadcast.to(roomId).emit("user-connected", userId); // emit the event from the server to the rest of the users in specific room
     socket.on("message", (message) => {
       let new_date = new Date();
       var time_rn =
-        ("0" + new_date.getHours()).slice(-2) +
-        ":" +
-        ("0" + new_date.getMinutes()).slice(-2) +
-        ":" +
-        ("0" + new_date.getSeconds()).slice(-2);
+          ("0" + new_date.getHours()).slice(-2) +
+          ":" +
+          ("0" + new_date.getMinutes()).slice(-2) +
+          ":" +
+          ("0" + new_date.getSeconds()).slice(-2);
       io.to(roomId).emit("createMessage", message, time_rn);
     });
     socket.on("share", (roomId, userId) => {
       socket.broadcast.to(roomId).emit("user-sharing", userId);
+    });
+
+    socket.on("re-share", (roomId, mediaStreamId) => {
+      socket.broadcast.to(roomId).emit("user-re-sharing", mediaStreamId);
+    });
+
+    socket.on("end-share", (roomId, mediaStreamId) => {
+      socket.broadcast.to(roomId).emit("ending-share", mediaStreamId)
     })
     socket.on("disconnect", () => {
       socket.broadcast.to(roomId).emit("user-disconnected", userId);
+      socket.broadcast.to(roomId).emit("share-disconnected", shareId)
     });
   });
 });

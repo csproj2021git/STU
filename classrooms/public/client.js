@@ -2,12 +2,14 @@ const socket = io("/");
 const videoGrid = document.getElementById("videos_grid");
 const myVideo = document.createElement("video");
 const peers = {};
-const peers_share = {};
 const senders = {}
 myVideo.muted = true;
 var myVideoStream;
+var myShareStream
 let ID
 let ID_SHARE
+let firstShare = []
+
 
 var peer = new Peer(undefined, {
   path: "/peerjs",
@@ -23,14 +25,12 @@ var peer2 = new Peer(undefined, {
 
 
 //On start, we join classroom
-peer.on("open", (id) => {
-  ID = id
-  socket.emit("join-room", ROOM_ID, id, 1); // 1- peer
-});
-
-peer2.on("open", (id) => {
-  ID_SHARE = id
-  socket.emit("join-room", ROOM_ID, id, 0); // 0- peer2
+peer.on("open", (id_peer) => {
+  ID = id_peer
+  peer2.on("open",(id_peer2) => {
+    socket.emit("join-room", ROOM_ID, id_peer, id_peer2);
+    ID_SHARE = id_peer2
+  })
 });
 
 
@@ -44,7 +44,6 @@ navigator.mediaDevices.getUserMedia({
   peer.on("call", (call) => {
     call.answer(stream);
     if (!peers[call.peer]) {
-      console.log("line 49 in call")
       connecToNewUser(call.peer, stream);
     }
   });
@@ -73,8 +72,31 @@ navigator.mediaDevices.getUserMedia({
   });
 
 
-  socket.on("user-sharing", (user_id) => {
-    setTimeout(connecToNewUser, 1000, user_id, stream); // to success to answer
+  socket.on("user-sharing", (userId) => {
+    setTimeout(connecToNewUser, 1000, userId, stream); // to success to answer
+  })
+
+  socket.on("ending-share", (mediaStreamId) => {
+    console.log("ending-share: ", mediaStreamId)
+    var videoList = document.getElementsByTagName("video");
+    for (let v of videoList) {
+      if (v.srcObject.id === mediaStreamId) {
+        v.style.visibility = "hidden"
+        v.style.height = "0"
+        v.style.width = "0"
+      }
+    }
+  })
+
+  socket.on("user-re-sharing", (mediaStreamId) => {
+    var videoList = document.getElementsByTagName("video");
+    for (let v of videoList) {
+      if (v.srcObject.id === mediaStreamId) {
+        v.style.height = "250px"
+        v.style.width = "300px"
+        v.style.visibility = "visible"
+      }
+    }
   })
 
   //When new user connects, we connect to him
@@ -84,20 +106,20 @@ navigator.mediaDevices.getUserMedia({
 
   // When user disconnects, we disconnect from him
   socket.on("user-disconnected", (userId) => {
-    if (peers_share[userId]) {
-      peers_share[userId].close();
-      dcPopup(userId)
-    }
-  });
-
-  // When user disconnects, we disconnect from him
-  socket.on("user-disconnected", (userId) => {
     if (peers[userId]) {
       peers[userId].close();
+      delete peers[userId];
       dcPopup(userId)
     }
   });
+  socket.on("share-disconnected", (shareId) => {
+    if (peers[shareId]) {
+      peers[shareId].close();
+      delete peers[shareId];
+    }
+  })
 });
+
 
 //Connecting to new user peer.
 const connecToNewUser = (userId, stream) => {
@@ -228,27 +250,42 @@ const dcPopup = (userId) => {
 }
 
 const leavingMeetingButtonClicked = () => {
-  console.log("User disconnected")
   location.href = "leaving_the_room.html"            // redirect and come back to home page!
 }
 
+
+let alreadyShared = false;
 // share screen:
 const shareButtonClicked = () => {
   // get display media
-  navigator.mediaDevices.getDisplayMedia({ video: true }).then((mediaStream) => {
+  if (alreadyShared) {
+    socket.emit("re-share", ROOM_ID, firstShare[0])
+  }
+  navigator.mediaDevices.getDisplayMedia({video: true}).then((mediaStream) => {
+    console.log("THE STREAM SHARE  IS:", mediaStream)
+    firstShare.push(mediaStream.id)
+    myShareStream = mediaStream
     var video = document.createElement("video");
     video.srcObject = mediaStream;
     video.onloadedmetadata = (e) => {
       video.play()
     };
     videoGrid.append(video)
-    socket.emit("share", ROOM_ID, ID_SHARE);
-
+    if (!alreadyShared) {
+      socket.emit("share", ROOM_ID, ID_SHARE);
+    } else {
+      let mediaStreamVideo = mediaStream.getVideoTracks()[0]
+      Object.getOwnPropertyNames(peers).forEach(userId => {
+        let sender = peers[userId].peerConnection.getSenders().find(function (s) {
+          return s.track.kind === mediaStreamVideo.kind;
+        })
+        sender.replaceTrack(mediaStreamVideo);
+      })
+    }
     // On call- then answer
-    peer2.on("call", (call)=> {
+    peer2.on("call", (call) => {
+      peers[call.peer] = call
       call.answer(mediaStream);
-      peers_share[call.peer] = call
-      console.log(Object.keys(peers_share).length)
     })
     // When user connected add the share stream to him
     socket.on("user-connected", (userId) => {
@@ -256,10 +293,18 @@ const shareButtonClicked = () => {
         //We are calling new user and sending him our stream
         const call = peer2.call(userId, mediaStream);
         peers[userId] = call;
+
       }, 1000, userId, mediaStream);
     });
+    mediaStream.getVideoTracks()[0].onended = function () {
+      socket.emit("end-share", ROOM_ID, firstShare[0])
+      // myShareStream.getVideoTracks()[0].enabled = false;
+      video.remove();
+    };
+    alreadyShared = true
   })
 }
+
 
 // stop share:
 const stopShareButtonClicked = () => {
