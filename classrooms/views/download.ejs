@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Download Files</title>
+    <base href="/">
+    <link rel="stylesheet" href="style.css" />
+
+</head>
+<body>
+    <div class="screen fs-screen active">
+        <table class="styled-table">
+            <thead>
+            <tr>
+                <th>File Name</th>
+                <th>Mod. Date</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+                <% files.forEach(element => { %>
+                <tr>
+                    <td><%= element.file_name %></td>
+                    <td> <%= element.modifyDate %></td>
+                    <td><button class="download-button" onclick="window.open('/download/' + '<%= roomId %>'  + '/' + '<%= element.file_name %>')">Download</button></td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload Files</title>
+    <base href="/">
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body class="body-page">
+    <h1 class="h1-upload">File Upload</h1>
+    <form method="POST" action="/upload/<%= roomId %>" enctype="multipart/form-data">
+        <label class="label" for="myfile">Select a file:
+        <input class="chooseButton" type="file" id="myfile" name="file"/></label>
+        <input class="uploadButton" type="submit" value="upload"/>
+    </form>
+</body>
+</html>
