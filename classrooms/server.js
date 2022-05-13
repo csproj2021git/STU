@@ -20,6 +20,20 @@ app.use("/peerjs", peerServer);               // using peer and giving unique id
 app.use(upload())
 
 app.get("/", (req, res) => {
+  // directory path
+  const dir = './uploads';
+  // create new directory
+  try {
+    // first check if directory already exists
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
+      console.log("Directory is created.");
+    } else {
+      console.log("Directory already exists.");
+    }
+  } catch (err) {
+    console.log(err);
+  }
   res.redirect(`/${uuidv4()}`); // redirect url
 });
 
@@ -138,4 +152,7 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(3030); // listen on some port
+// listen on some port
+server.listen(3030, ()=>{
+  console.log("listen on port 3030")
+});
