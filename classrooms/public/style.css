@@ -47,8 +47,8 @@
 }
 
 video {
-    height: 250px;
-    width: 300px;
+    height: 240px;
+    width: 320px;
     padding: 10px;
     margin: 5px;
     background-color: #242324;
@@ -257,4 +257,8 @@ li {
 .download-button{
     font-family: Garamond, SansSerif, serif;
     font-size: 25px;
+}
+
+.enter-name{
+    position: absolute;
 }
