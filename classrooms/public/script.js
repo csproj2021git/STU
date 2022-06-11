@@ -1,15 +1,20 @@
-const socket = io("/");
 const videoGrid = document.getElementById("videos_grid");
 const myVideo = document.createElement("video");
+const canvas = document.createElement('canvas')
+canvas.width = 640
+canvas.height = 480
+const ctx = canvas.getContext("2d") // The use of canvas is because more browsers supports it.
 const peers = {};
-const senders = {}
 myVideo.muted = true;
 var myVideoStream;
 var myShareStream
 let ID
 let ID_SHARE
+let NAME
 let firstShare = []
+let enlargedVideo
 
+const socket = io("/");
 
 var peer = new Peer(undefined, {
   path: "/peerjs",
@@ -23,44 +28,87 @@ var peer2 = new Peer(undefined, {
   port: "3030",
 });
 
-
 //On start, we join classroom
-peer.on("open", (id_peer) => {
-  ID = id_peer
-  peer2.on("open",(id_peer2) => {
-    socket.emit("join-room", ROOM_ID, id_peer, id_peer2);
-    ID_SHARE = id_peer2
+let ID_PROMISE = new Promise((resolve, reject) => {
+  peer.on("open", (id_peer) => {
+    resolve(id_peer)
+  });
+})
+
+
+let ID_SHARE_PROMISE = new Promise((resolve, reject) => {
+  peer2.on("open", (id_peer2) => {
+    resolve(id_peer2)
   })
-});
+})
 
+let NAME_PROMISE = new Promise((resolve, reject) => {
+  let enterName = document.getElementById("enter-name")
+  let enterNameButton = document.getElementById("name-button")
+  let nameInput = document.getElementById("name-input")
+  enterNameButton.addEventListener("click", () => {
+    console.log('event click name change')
+    if (nameInput.value) {
+      resolve(nameInput.value)
+      $("html").unbind('keydown')
+      // How to make enterName disappear??? todo
+    }
+  }, {once: true})
+  $("html").bind('keydown', (e) => {
+    if (e.which === 13 && nameInput.value.length !== 0) { // If enter was pressed before entering name
+      resolve(nameInput.value)
+      $("html").unbind('keydown') // todo fix so messages will work again
 
-navigator.mediaDevices.getUserMedia({
-  // access to the devices
-  video: true,
-  audio: true,
-}).then((stream) => {
-  myVideoStream = stream;
-  addVideoStream(myVideo, stream); // add my video stream
-  peer.on("call", (call) => {
-    call.answer(stream);
-    if (!peers[call.peer]) {
-      connectToNewUser(call.peer, stream);
+      // How to make enterName disappear??? todo
     }
   });
+})
+
+Promise.all([ID_PROMISE, ID_SHARE_PROMISE, NAME_PROMISE]).then((values) => {
+  ID = values[0]
+  ID_SHARE = values[1]
+  NAME = values[2]
+  console.log(ID)
+  socket.emit("join-room", ROOM_ID, ID, ID_SHARE, NAME);
+  // Putting messaging here, because we already chose the name, so enter key is for sending messages now.
   // input value
   let text = $("input");
   // when press enter send message
   $("html").keydown((e) => {
     if (e.which === 13 && text.val().length !== 0) {
-      socket.emit("message", text.val());
+      socket.emit("message", text.val(), NAME);
       text.val("");
     }
   });
+})
 
-  socket.on("createMessage", (message, time_rn) => {
+
+
+navigator.mediaDevices.getUserMedia({
+  // access to the devices
+  // video: true,
+  video: {
+    width: {max: 320},
+    height: {max: 240},
+    frameRate: {max: 30}
+  },
+  audio: true,
+}).then((stream) => {
+  peer.on("call", (call) => {
+    console.log("call")
+    call.answer(stream); // todo add transformSdp
+    if (!peers[call.peer]) {
+      connectToNewUser(call.peer, stream);
+    }
+  });
+  console.log("Got user media")
+  myVideoStream = stream;
+  addVideoStream(myVideo, stream); // add my video stream
+
+  socket.on("createMessage", (message, time_rn, name) => {
     $("ul").append(`
         <li class="message">
-          <b>user</b>
+          <b>${name}</b>
           <br>
           <div class="msg">
             ${message}
@@ -73,6 +121,7 @@ navigator.mediaDevices.getUserMedia({
   });
 
   socket.on("user-sharing", (userId) => {
+    console.log("user sharing")
     setTimeout(connectToNewUser, 1000, userId, stream); // to success to answer
   })
 
@@ -88,35 +137,42 @@ navigator.mediaDevices.getUserMedia({
     }
   })
 
-  socket.on("user-re-sharing", (mediaStreamId) => {
+  socket.on("user-re-sharing", (mediaStreamId) => { // todo simplify?
+    console.log("reshare")
     var videoList = document.getElementsByTagName("video");
     for (let v of videoList) {
       if (v.srcObject.id === mediaStreamId) {
-        v.style.height = "250px"
-        v.style.width = "300px"
+        v.style.height = "240px"
+        v.style.width = "320px"
         v.style.visibility = "visible"
       }
     }
   })
-
+  // LAST change
   //When new user connects, we connect to him
   socket.on("user-connected", (userId) => {
+    console.log('User Connected')
     setTimeout(connectToNewUser, 1000, userId, stream); // to success to answer
   });
 
   // When user disconnects, we disconnect from him
-  socket.on("user-disconnected", (userId) => {
+  socket.on("user-disconnected", (userId, userName) => {
+    console.log("user dc")
     if (peers[userId]) {
+      console.log("user dc2")
       peers[userId].close();
       delete peers[userId];
-      dcPopup(userId)
+      dcPopup(userName)
+      document.getElementById(userId).remove() // Experimental
     }
   });
 
   socket.on("share-disconnected", (shareId) => {
+    console.log("share dc")
     if (peers[shareId]) {
       peers[shareId].close();
       delete peers[shareId];
+      document.getElementById(shareId).remove() // Experimental
     }
   })
 
@@ -126,6 +182,14 @@ navigator.mediaDevices.getUserMedia({
     popUpMessage(userId);
     // adding the files from the dir and make that click on file will download him!
     //displayFiles(ROOM_ID, fs);
+  })
+
+  socket.on("upload-frame", () => {
+    console.log("got the upload query")
+    // ctx.filter = "brightness(150%)"
+    ctx.drawImage(myVideo, 0, 0, 640, 480)
+    let dataUrl = canvas.toDataURL("image/png")
+    socket.emit("data-url", ROOM_ID, ID, dataUrl)
   })
 });
 
@@ -163,16 +227,19 @@ const showFiles = () => {
 //Connecting to new user peer.
 const connectToNewUser = (userId, stream) => {
   //We are calling new user and sending him our stream
+  console.log("connect to user", userId)
   const call = peer.call(userId, stream);
   peers[userId] = call;
   const video = document.createElement("video");
+  video.setAttribute("id", userId) // Experimental
   call.on("stream", (userVideoStream) => {
     addVideoStream(video, userVideoStream);
   });
-  call.on("close", () => {
-    //------------------------------------problem cant delete the new user after share-------------//
-    video.remove();
-  });
+  // call.on("close", () => { // Experimental
+  //   //------------------------------------problem cant delete the new user after share-------------//
+  //   console.log("I need ot be removed")
+  //   video.remove();
+  // });
 };
 
 //Add stream into our own page
@@ -181,6 +248,28 @@ const addVideoStream = (video, stream) => {
   video.addEventListener("loadedmetadata", () => {
     video.play();
   });
+  if (video.getAttribute('listener') !== 'true') {
+
+    video.addEventListener("click", (e) => {
+      if (video.getAttribute('enlarged') === 'false') {
+        video.style.transform = 'scale(2)'
+        video.setAttribute('enlarged', 'true')
+        if (enlargedVideo !== undefined) {
+          enlargedVideo.click()
+        }
+        enlargedVideo = video
+      } else {
+        video.style.transform = 'scale(1)'
+        video.setAttribute('enlarged', 'false')
+        if (enlargedVideo !== video) {
+          enlargedVideo.click()
+        }
+        enlargedVideo = undefined
+      }
+    })
+    video.setAttribute('enlarged', 'false')
+    video.setAttribute('listener', 'true')
+  }
   videoGrid.append(video);
 };
 
@@ -348,7 +437,30 @@ const fileButtonClicked = () => {
   window.open("/upload/" + ROOM_ID);
 }
 
+const drowsinessButtonClicked = () => {
+  socket.emit("drowsiness-check", ROOM_ID, ID)
+  // START CALCULATE % OF STUDENTS AWAKE OR NOT, CHANGING AND SENDING MESSAGE TO TEACHER ABOUT %'S
 
+
+  // ctx.drawImage(myVideo, 0, 0, 640, 480)
+  // let jpegFile = canvas.toDataURL("image/png")
+  // console.log("after to data url")
+  // $.ajax({
+  //   type: 'POST',
+  //   url: 'http://localhost:3030/test/' + ROOM_ID + '/' + ID + '/',
+  //   data: {
+  //     imgBase64: jpegFile,
+  //     userId: ID
+  //   },
+  //   // processData: false,
+  //   // contentType: false,
+  //   success: function(msg){
+  //     console.log('posted' + msg);
+  //   }
+  // });
+  // console.log("after ajax")
+  // // console.log(jpegFile)
+}
 
 // // stop share:
 // const stopShareButtonClicked = () => {

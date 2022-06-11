@@ -1,11 +1,14 @@
 const express = require("express");           // using express for our web upp
 const app = express();
 const upload = require('express-fileupload')
+const bodyParser = require('body-parser')
 const fs = require('fs');
+const {default: axios} = require('axios')
+
 var socket_copy
 var user_file
-
-const server = require("http").Server(app);   // server
+const http = require("http")
+const server = http.Server(app);   // server
 const { v4: uuidv4 } = require("uuid");       // for unique id
 const io = require("socket.io")(server);      // socket for connection
 
@@ -18,6 +21,7 @@ app.set("view engine", "ejs");                // embedded js
 app.use(express.static("public"));
 app.use("/peerjs", peerServer);               // using peer and giving unique id!!!!
 app.use(upload())
+app.use(bodyParser.urlencoded({extended: true}))
 
 app.get("/", (req, res) => {
   // directory path
@@ -113,12 +117,13 @@ app.get('/download/:room/:fileName',(req,res) => {
   res.download(file); // Set disposition and send it.
 })
 
-
 io.on("connection", (socket) => {
-  socket.on("join-room", (roomId, userId, shareId) => {
+  console.log("Connection")
+  socket.on("join-room", (roomId, userId, shareId, userName) => {
+    console.log("join room")
     socket.join(roomId);
     socket.broadcast.to(roomId).emit("user-connected", userId); // emit the event from the server to the rest of the users in specific room
-    socket.on("message", (message) => {
+    socket.on("message", (message, name) => {
       let new_date = new Date();
       var time_rn =
           ("0" + new_date.getHours()).slice(-2) +
@@ -126,7 +131,7 @@ io.on("connection", (socket) => {
           ("0" + new_date.getMinutes()).slice(-2) +
           ":" +
           ("0" + new_date.getSeconds()).slice(-2);
-      io.to(roomId).emit("createMessage", message, time_rn);
+      io.to(roomId).emit("createMessage", message, time_rn, name);
     });
 
     socket.on("share", (roomId, userId) => {
@@ -140,15 +145,33 @@ io.on("connection", (socket) => {
     socket.on("end-share", (roomId, mediaStreamId) => {
       socket.broadcast.to(roomId).emit("ending-share", mediaStreamId)
     })
-    socket.on("disconnect", () => {
+
+
+    socket.on("disconnect", () => { // Will it disconnect from every room he is involved?? how will it know which room
       socket.broadcast.to(roomId).emit("share-disconnected", shareId)
-      socket.broadcast.to(roomId).emit("user-disconnected", userId);
+      socket.broadcast.to(roomId).emit("user-disconnected", userId, userName);
     });
 
     socket.on("file-upload", (ui)=>{
       socket_copy = socket
       user_file = ui
     })
+
+    socket.on("drowsiness-check",(roomId, OriginID) => {
+      io.to(roomId).emit("upload-frame");
+      console.log("drowsiness-check")
+    })
+    socket.on("data-url", async (roomId, userId, dataUrl) => {
+      console.log("in data url in server")
+      try {
+        const resp = await axios.post('http://localhost:5000', {imgBase64: dataUrl, userId: userId})
+        console.log(resp.data)
+      } catch (err) {
+        console.error(err)
+      }
+    })
+
+
   });
 });
 
