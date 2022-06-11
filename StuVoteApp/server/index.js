@@ -7,7 +7,6 @@ const routes = require('./routes')
 const db = require('./models')
 
 app.get('/', (req,res) => {
-    console.log("Im here")
     res.send("Server alive")
 })
 
