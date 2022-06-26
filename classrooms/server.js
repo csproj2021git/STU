@@ -117,11 +117,17 @@ app.get('/download/:room/:fileName',(req,res) => {
   res.download(file); // Set disposition and send it.
 })
 
-io.on("connection", (socket) => {
+io.on("connection", (socket) => { // todo change to async>??
   console.log("Connection")
   socket.on("join-room", (roomId, userId, shareId, userName) => {
+    // console.log(io.sockets.adapter.rooms.get(roomId).currentShare)
     console.log("join room")
     socket.join(roomId);
+    if (typeof io.sockets.adapter.rooms.get(roomId).disabledShares === 'undefined') {
+      io.sockets.adapter.rooms.get(roomId).disabledShares = [] // todo - 24/6 - change to array cause this isnt serializable
+    }
+    io.to(socket.id).emit("update-sharer", roomId, io.sockets.adapter.rooms.get(roomId).currentShare,
+        io.sockets.adapter.rooms.get(roomId).disabledShares); // todo continue this transition on script.js - check if that is the right roomId, cause every client can be on few zooms. and then try to call, get rejected, and get called back by the sharer.
     socket.broadcast.to(roomId).emit("user-connected", userId); // emit the event from the server to the rest of the users in specific room
     socket.on("message", (message, name) => {
       let new_date = new Date();
@@ -134,16 +140,22 @@ io.on("connection", (socket) => {
       io.to(roomId).emit("createMessage", message, time_rn, name);
     });
 
-    socket.on("share", (roomId, userId) => {
-      socket.broadcast.to(roomId).emit("user-sharing", userId);
+    socket.on("share", (roomId, activeShareId) => {
+      io.sockets.adapter.rooms.get(roomId).currentShare = activeShareId
+      socket.broadcast.to(roomId).emit("user-sharing", activeShareId, socket.id);
     });
 
-    socket.on("re-share", (roomId, mediaStreamId) => {
-      socket.broadcast.to(roomId).emit("user-re-sharing", mediaStreamId);
+    socket.on("re-share", (roomId, activeShareId) => {
+      io.sockets.adapter.rooms.get(roomId).currentShare = activeShareId
+      io.sockets.adapter.rooms.get(roomId).disabledShares = io.sockets.adapter.rooms.get(roomId).disabledShares.filter(e => e !== activeShareId)
+      socket.broadcast.to(roomId).emit("user-re-sharing", activeShareId);
     });
 
-    socket.on("end-share", (roomId, mediaStreamId) => {
-      socket.broadcast.to(roomId).emit("ending-share", mediaStreamId)
+    socket.on("end-share", (roomId, activeShareId) => {
+      io.sockets.adapter.rooms.get(roomId).disabledShares.push(activeShareId)
+      console.log(io.sockets.adapter.rooms.get(roomId).disabledShares)
+      io.sockets.adapter.rooms.get(roomId).currentShare = null
+      socket.broadcast.to(roomId).emit("ending-share", activeShareId)
     })
 
 
@@ -160,6 +172,10 @@ io.on("connection", (socket) => {
     socket.on("drowsiness-check",(roomId, OriginID) => {
       io.to(roomId).emit("upload-frame");
       console.log("drowsiness-check")
+    })
+
+    socket.on("call-to-me", (callThisUserId, shareSocketId) => {
+      io.to(shareSocketId).emit("call-this", roomId, callThisUserId);
     })
     socket.on("data-url", async (roomId, userId, dataUrl) => {
       console.log("in data url in server")
