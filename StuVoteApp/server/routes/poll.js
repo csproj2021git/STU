@@ -4,7 +4,7 @@ const middlewares = require('../middlewares')
 
 //localhost:PORT/api/poll/
 router.route('/')
-.get(handle.showPolls)
+.get(middlewares.authorize, handle.showPolls)
 .post(middlewares.authorize, handle.createPoll)
 
 //localhost:PORT/api/poll/user
