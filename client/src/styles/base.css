@@ -1,0 +1,10 @@
+:root{
+    --danger: #000000;
+    --blue: var(--blue);
+    --light: #310233;
+
+}
+
+body{
+    background-color: var(--light);
+}
