@@ -8,7 +8,6 @@ const AuthPage =({authType, isAuthenticated}) => {
     return (
     <div>
         <Auth authType = {authType}/>
-        <ErrorMessage />
     </div>
     )
 }
