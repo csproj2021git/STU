@@ -6,7 +6,7 @@ Make sure you have already installed:
 1) node.js (we'll be using node and npm's package manager).
 2) python interpreter, e.g. Anaconda (With windows PATH variable updated with pip and python command locations).
 
-To run the classroom app startalone:
+To run the classroom app standalone:
 
     npm start ./classrooms/server.js
 
