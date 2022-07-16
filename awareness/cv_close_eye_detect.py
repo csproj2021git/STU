@@ -10,7 +10,7 @@ import json
 app = Flask(__name__)
 
 eye_cascPath = 'D:\Chrome Downloads\project open eye\Closed-Eye-Detection-with-opencv-master/haarcascade_eye_tree_eyeglasses.xml'  #eye detect model
-eye_cascPath2 = 'D:\Chrome Downloads\project open eye\Closed-Eye-Detection-with-opencv-master/haarcascade_eye.xml' #
+# eye_cascPath2 = 'D:\Chrome Downloads\project open eye\Closed-Eye-Detection-with-opencv-master/haarcascade_eye.xml' #
 face_cascPath = 'D:\Chrome Downloads\project open eye\Closed-Eye-Detection-with-opencv-master/haarcascade_frontalface_alt.xml'  #face detect model
 faceCascade = cv2.CascadeClassifier(face_cascPath)
 eyeCascade = cv2.CascadeClassifier(eye_cascPath)
