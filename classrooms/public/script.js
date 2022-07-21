@@ -557,6 +557,9 @@ const shareButtonClicked = () => {
   }
 }
 
+const surveyButtonClicked = () => {
+  window.open("localhost:4000");
+}
 // upload files
 const fileButtonClicked = () => {
   socket.emit("file-upload", ID)
