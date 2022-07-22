@@ -7,6 +7,7 @@ const AuthPage =({authType, isAuthenticated}) => {
     if(isAuthenticated) return <Link to="/" />
     return (
     <div>
+        <h3>{authType}</h3>
         <Auth authType = {authType}/>
     </div>
     )

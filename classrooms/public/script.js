@@ -408,7 +408,7 @@ const playStop = () => {
 // change the icon on click
 const setMuteButton = () => {
   document.querySelector(".main_mute_button").innerHTML = `
-      <i class="fas fa-microphone"></i>
+      <i></i>
       <span>Mute</span>
     `;
 };
@@ -416,7 +416,7 @@ const setMuteButton = () => {
 // change the icon on click
 const setUnmuteButton = () => {
   document.querySelector(".main_mute_button").innerHTML = `
-      <i class="unmute fas fa-microphone-slash"></i>
+      <i></i>
       <span>Unmute</span>
     `;
 };
@@ -424,7 +424,7 @@ const setUnmuteButton = () => {
 // change the icon on click
 const setStopVideo = () => {
   document.querySelector(".main_video_button").innerHTML = `
-      <i class="fas fa-video"></i>
+      <i></i>
       <span>Stop Video</span>
     `;
 };
@@ -432,7 +432,7 @@ const setStopVideo = () => {
 // change the icon on click
 const setPlayVideo = () => {
   document.querySelector(".main_video_button").innerHTML = `
-    <i class="stop fas fa-video-slash"></i>
+    <i></i>
       <span>Play Video</span>
     `;
 };

@@ -26,15 +26,8 @@ class Polls extends Component{
                 <li key={poll._id} onClick={() => this.handleSelect(poll._id)}>{poll.question}</li>
             )
         )
-        return (
-            <div>
-                {auth.isAuthenticated &&(
-                    <div>
-                        <button onClick={getPolls}>All polls</button>
-                        <button onClick={getUserPolls}>My polls</button>
-                    </div>
-                )}
-                <ul>{polls}</ul>
+        return (<div>
+            {auth.isAuthenticated && <div> My polls <ul>{polls}</ul></div>}
             </div>
         )
     }

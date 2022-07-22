@@ -9,6 +9,8 @@ class Auth extends Component{
             username: '',
             password: '',
         }
+        const {authType} = this.props
+        this.authType = authType
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
     }
