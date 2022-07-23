@@ -7,7 +7,19 @@ import {BrowserRouter as Router} from 'react-router-dom'
 import RouteViews from './RoutesViews'
 import NavBar from './NavBar'
 import ErrorMessage from "../components/ErrorMessage"
-
+var createHost = require('cross-domain-storage/host')
+var createGuest = require('cross-domain-storage/guest')
+var s = createGuest('http://localhost:4000')
+var storageHost = createHost([
+    {
+        origin: 'http://localhost:3030',
+        allowedMethods: ['get', 'set', 'remove'],
+    },
+    {
+        origin: 'http://localhost:4000',
+        allowedMethods: ['get', 'set', 'remove'],
+    },
+])
 //When turning on app, it will check if user already logged in
 if(localStorage.jwtToken){
     setToken(localStorage.jwtToken)

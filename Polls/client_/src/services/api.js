@@ -14,6 +14,7 @@ const setToken = token => {
 
 const call = async (method, path, data) => {
     const response = await axios[method](`${host}/${path}`, data)
+    console.log(JSON.stringify(response))
     return response.data
 }
 

@@ -12,6 +12,7 @@ app.get('/', (req,res) => {
 
 app.use(cors())
 app.use(bodyParser.json())
+app.use('/api/auth',routes.auth)
 app.use(handle.notFound)
 app.use(handle.errors)
 

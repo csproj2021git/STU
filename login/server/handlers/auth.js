@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 
 // Register user
 exports.register = async (req, res, next) =>{
+    console.log("Im here!")
     try{
         const user = await db.User.create(req.body)
         const { id, username } = user
