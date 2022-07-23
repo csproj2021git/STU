@@ -1,7 +1,6 @@
 import {addError, removeError} from './error'
 import {SET_CURRENT_USER} from '../actionsTypes'
 import api from '../../services/api'
-import { setCurrentPoll } from './polls'
 export const setCurrentUser = user => ({
     type: SET_CURRENT_USER,
     user

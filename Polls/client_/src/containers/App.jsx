@@ -1,7 +1,7 @@
 import React from "react"
 import {Provider} from 'react-redux'
 import {store} from '../store'
-import {setCurrentUser, addError, setToken, removeError} from '../store/actions'
+import {setCurrentUser, setToken, removeError} from '../store/actions'
 import decode from 'jwt-decode'
 import {BrowserRouter as Router} from 'react-router-dom'
 import RouteViews from './RoutesViews'

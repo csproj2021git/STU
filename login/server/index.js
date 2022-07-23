@@ -17,3 +17,5 @@ app.use(handle.errors)
 
 app.listen(process.env.PORT, 
         console.log(`Server running on ${process.env.PORT}`))
+
+process.env.SECRET = handle.getSecret()

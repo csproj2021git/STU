@@ -4,8 +4,13 @@ import "./index.css";
 import App from "./containers/App";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+// if(!localStorage.jwtToken){
+//   window.location.href = "http://localhost:5000"
+// }
+// else{
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+// }

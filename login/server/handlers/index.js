@@ -1,5 +1,6 @@
 module.exports = {
     ...require('./auth'),
+    ...require('./env'),
 }
 
 module.exports.errors = (err, req, res, next) =>{
