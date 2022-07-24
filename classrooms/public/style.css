@@ -259,13 +259,87 @@ li {
     font-size: 25px;
 }
 
-.enter-name{
+.survey-form{
+    width: fit-content;
+    height: fit-content;
+    background: rgb(97, 0, 255);
+    border-radius: 6px;
     position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.1);
+    text-align: center;
+    padding: 15px 35px;
+    visibility: hidden;
+    transition: transform 0.4s, bottom 0.4s;
 }
 
-.mic-icon{
-    background: url("C:\\Users\\abronshtein\\Downloads\\icon.png");
-    height: 20px;
-    width: 20px;
-    display: block; 
+.open-survey-form{
+    visibility: visible;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+
+
+
+.enter-name{
+    width: fit-content;
+    height: fit-content;
+    background: rgb(97, 0, 255);
+    border-radius: 6px;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.1);
+    text-align: center;
+    padding: 15px 35px;
+    visibility: hidden;
+    transition: transform 0.4s, top 0.4s;
+}
+
+.open-enter-name{
+    visibility: visible;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.enter-name > span {
+    display: block;
+    font-family: Garamond, SansSerif, serif;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.enter-name-button {
+    background-color: rgb(97, 0, 255);
+}
+
+/*input:invalid {*/
+/*    background: pink;*/
+/*}*/
+
+/*input:focus {*/
+/*    background: cyan;*/
+/*}*/
+
+/*input:valid {*/
+/*    background: lime;*/
+/*}*/
+
+.enter-name-input:valid {
+    background-color: lightgreen;
+}
+
+.enter-name-input:invalid {
+    background-color: red;
+}
+
+html {
+    background: black; <!-- To make the entire background black -->
+}
+
+body {
+    margin: 0 !important; <!-- A work around to not having margins at top and bottom -->
+    padding: 0 !important;
 }
