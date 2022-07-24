@@ -42,7 +42,7 @@ export const createPoll = (data) => {
     return async dispatch => {
         try{
             const poll = await api.call('post', 'polls', data)
-            console.log(`What is this ${poll}`)
+            console.log(`polls: ${JSON.stringify(poll._id)}`)
             dispatch(setCurrentPoll(poll))
             dispatch(removeError())
         }catch (err){

@@ -15,7 +15,6 @@ const Poll = ({poll, auth, vote}) => {
                 <label>Number of votes: {votes.votes}</label>   
             </div>
         ))
-        console.log(data)
     }catch(err){
 
     }

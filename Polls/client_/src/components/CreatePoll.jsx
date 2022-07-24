@@ -26,7 +26,7 @@ class CreatePoll extends Component{
     handleSubmit(e){
         e.preventDefault()
         this.props.createPoll(this.state)
-        window.location.replace("/");
+        //window.location.replace("/");
     }
 
     handleAnswer(e, index){

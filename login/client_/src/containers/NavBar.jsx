@@ -9,9 +9,6 @@ const NavBar = ({auth, logout}) => {
         {auth.isAuthenticated && <p>Hello {auth.user.username} </p>}
         <ul>
             <li>
-                <Link to='/'>Home page</Link>
-            </li>
-            <li>
                 <Link to='/register'>Register</Link>
             </li>
             <li>
@@ -19,9 +16,6 @@ const NavBar = ({auth, logout}) => {
             </li>
             <li>
                 <Link to='/' onClick={logout}>Logout</Link>
-            </li>
-            <li>
-                <Link to='/test'>Test page</Link>
             </li>
         </ul>
     </div>

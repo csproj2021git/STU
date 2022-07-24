@@ -25,10 +25,8 @@ exports.createPoll = async (req, res, next) => {
                 option, votes: 0
             }))
         })
-        console.log(`Poll data: ${poll}`)
         user.polls.push(poll._id)
         await user.save()
-        console.log(`WHAT IS DOC: ${poll._doc}`)
         res.status(201).json({...poll._doc, user: user._id})
     }catch(err){
         err.status = 400
