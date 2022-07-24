@@ -4,17 +4,15 @@ const middlewares = require('../middlewares')
 
 //domain/course/
 router.route('/')
-.get(middlewares.authorize, handle.allCourses)
-.post(middlewares.authorize, handle.createCourse)
+.get(middlewares.authorize, handle.allCourses) //V
+.post(middlewares.authorize, handle.createCourse) //V
 
 //domain/course/user
 router.route('/user')
-.get(middlewares.authorize, handle.userCourses)
-.post(middlewares.authorize, handle.sign)
+.get(middlewares.authorize, handle.userCourses) //V
+.post(middlewares.authorize, handle.sign) //V
 
-module.exports = router
-
-//domain/course/user
+//domain/course/room
 router.route('/room')
 .get(middlewares.authorize, handle.courseRooms)
 .post(middlewares.authorize, handle.createRoom)

@@ -14,3 +14,4 @@ connect();
 module.exports.User = require('./User')
 module.exports.Env = require('./Env')
 module.exports.Course = require('./Course')
+module.exports.Classroom = require('./Classroom')
