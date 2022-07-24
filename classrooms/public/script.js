@@ -16,6 +16,8 @@ let NAME
 let currentShare = null
 let fullscreenId = null
 let globalDisabledShares = null
+let survey = document.getElementById('survey-form')
+let survey_button = document.getElementById('survey-form-submit-button')
 // let enlargedVideo
 
 const socket = io("/");
@@ -50,20 +52,22 @@ let NAME_PROMISE = new Promise((resolve, reject) => {
   let enterName = document.getElementById("enter-name")
   let enterNameButton = document.getElementById("name-button")
   let nameInput = document.getElementById("name-input")
+
+  setTimeout(()=>{enterName.classList.add("open-enter-name")}, 2500)
+
   enterNameButton.addEventListener("click", () => {
     console.log('event click name change')
     if (nameInput.value) {
       resolve(nameInput.value)
       $("html").unbind('keydown')
-      // How to make enterName disappear??? todo
+      enterName.classList.remove("open-enter-name")
     }
-  }, {once: true})
+  }) // , {once: true})
   $("html").bind('keydown', (e) => {
     if (e.which === 13 && nameInput.value.length !== 0) { // If enter was pressed before entering name
       resolve(nameInput.value)
       $("html").unbind('keydown') // todo fix so messages will work again
-
-      // How to make enterName disappear??? todo
+      enterName.classList.remove("open-enter-name")
     }
   });
 }).then(setName => NAME = setName)
@@ -558,7 +562,14 @@ const shareButtonClicked = () => {
 }
 
 const surveyButtonClicked = () => {
-  window.open("localhost:4000");
+  // window.open("localhost:4000");
+  if (!survey.classList.contains('open-survey-form')) {
+    survey.classList.add('open-survey-form')
+    survey_button.addEventListener("click", disappear_form) // todo check if its not adding each time another callback
+  }
+}
+const disappear_form = () => {
+  survey.classList.remove('open-survey-form')
 }
 // upload files
 const fileButtonClicked = () => {
@@ -609,6 +620,9 @@ function fakeFullscreen(elem) {
   elem.style.objectFit = 'cover'
   elem.style.width = '100vw'
   elem.style.height = '100vh'
+  if (!chat_off) {
+    chatOnChatOff()
+  }
 }
 
 function invisibleVideo(elem) {
