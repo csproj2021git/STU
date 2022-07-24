@@ -21,8 +21,9 @@ var storageHost = createHost([
 var remoteStorage = createGuest("http://localhost:5000"); // <--- Who we want to be guests of
 
 remoteStorage.get("jwtToken", function (error, value) {
-    if(value){
+    if(value && !localStorage.jwtToken){
       localStorage.setItem('jwtToken', value)
+      window.location.href = "/"
     }
   });
 
