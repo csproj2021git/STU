@@ -4,6 +4,8 @@ import {setCurrentUser, setToken, removeError} from '../store/actions'
 import decode from 'jwt-decode'
 import HomePage from "../pages/Homepage";
 
+var username = 'Guest'
+
 var createGuest = require("cross-domain-storage/guest");
 var createHost = require("cross-domain-storage/host");
 var storageHost = createHost([
@@ -22,20 +24,17 @@ remoteStorage.get("jwtToken", function (error, value) {
     }
   });
 
+
+
 //When turning on app, it will check if user already logged in
 if(localStorage.jwtToken){
+    username = decode(localStorage.jwtToken).username
     setToken(localStorage.jwtToken)
-    try{
-        store.dispatch(setCurrentUser(decode(localStorage.jwtToken)))
-    }catch(err){
-        store.dispatch(setCurrentUser({}))
-        store.dispatch(removeError({}))
-    }
 }
 
 const App = () => {
 return (
-  <HomePage />
+  <HomePage username = {username}/>
 )
 }
 
