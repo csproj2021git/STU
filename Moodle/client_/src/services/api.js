@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const host = "http://localhost:7001/api/course"
+const host = "http://localhost:7001/api"
 
 // sets header default token
 const setToken = token => {
@@ -13,7 +13,7 @@ const setToken = token => {
 
 
 const call = async (method, path, data) => {
-    const response = await axios["get"](`${host}`)
+    const response = await axios[method](`${host}/${path}`, data)
     return response.data
 }
 

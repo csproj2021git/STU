@@ -1,6 +1,7 @@
 import {addError, removeError} from './error'
 import {SET_CURRENT_USER} from '../actionsTypes'
 import api from '../../services/api'
+
 export const setCurrentUser = user => ({
     type: SET_CURRENT_USER,
     user
@@ -18,7 +19,6 @@ export const authUser = (path, data) => {
             api.setToken(token)
             dispatch(setCurrentUser(user))
             dispatch(removeError())
-            window.location.replace("/");
         } catch(err){
             const error = err.response.data
             dispatch(addError(error.err))
