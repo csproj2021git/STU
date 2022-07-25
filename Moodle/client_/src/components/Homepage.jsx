@@ -16,7 +16,7 @@ class Homepage extends Component{
 
     getCourses = async () => {
         try{
-            const courses = await api.call('get','')
+            const courses = await api.call('get','course')
             return courses
         }catch (err){
             console.log(err)

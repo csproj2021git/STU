@@ -12,7 +12,7 @@ app.get('/', (req,res) => {
 
 app.use(cors())
 app.use(bodyParser.json())
-app.use('/api/course',routes.course)
+app.use('/api/course',routes.course).use(cors())
 app.use(handle.notFound)
 app.use(handle.errors)
 
