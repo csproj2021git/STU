@@ -23,6 +23,10 @@ var storageHost = createHost([
     origin: "http://localhost:3030",
     allowedMethods: ["get", "set", "remove"], 
   },
+  {
+    origin: "http://localhost:7000",
+    allowedMethods: ["get", "set", "remove"], 
+  },
 ]);//<--- First add yourself then others, you MUST add yourself, this tells us who is allowed to reach us and with what methods
 
 //When turning on app, it will check if user already logged in
