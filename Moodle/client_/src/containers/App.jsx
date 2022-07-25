@@ -38,34 +38,36 @@ if(localStorage.jwtToken){
 }
 
 const App = () => {
-const [crossDomainValue, setCrossDomainValue] = useState('')
-return (<Provider store = {store}>
-    <Router>
-        <div>
-        <header>
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            remoteStorage.get("jwtToken", function (error, value) {
-              if(value){
-                setCrossDomainValue(value)
-                localStorage.setItem('jwtToken', value)
-              }
-            });
-          }}
-        >
-          What token is in login ?
-        </button>
-        <p>
-          Token in login: {crossDomainValue}
-        </p>
-      </header>
-            <NavBar/>
-            <RouteViews />
-            <ErrorMessage/>
+return (
+<div class="hero">
+<head>
+<title>STU Moodle</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="styles/style.css" />
+</head>
+  <nav>
+  <h2 class="logo">Moodle<span>STU</span></h2>
+        <ul>
+            <li><button onclick="addExistCourse()">Add an existing course</button></li>
+            <li><button onclick="addNewCourse()">Create a new course</button></li>
+        </ul>
+  </nav>
+  <div>
+  <div class="content">
+            <h2 class="Student_details"> Student details:</h2>
+            <ul id="coursesList">
+                <li id="name">Name: </li>
+                <li id="id">ID: </li>
+            </ul>
         </div>
-    </Router>
-</Provider>)
+        <div class="courses">
+            <h2 class="courses_list"> Courses List:</h2>
+            <ul id="coursesList"></ul>
+        </div>
+  </div>
+</div>
+)
 }
 
 export default App
