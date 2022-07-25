@@ -38,7 +38,7 @@ exports.createCourse = async (req, res, next) => {
         }) //throws of exists
         user.courses.push(course._id)
         await user.save()
-        res.status(201).json({...course._doc, user: user._id})
+        res.status(201).json({course})
     }catch(err){
         err.status = 400
         next(err)
@@ -50,14 +50,15 @@ exports.sign = async (req, res, next) => {
     try{
         const {id} = req.decoded
         const user = await db.User.findById(id)
-        const {_id} = req.body
-        const course = await db.Course.findById(_id)
+        const {number} = req.body
+        const course = await db.Course.findOne({number: number})
         if(!course){
             const err = new Error('Course not found')
             throw(err)
         }
         for(let i=0; i< user.courses.length; i++){
             if(user.courses[i].valueOf() === course._id.valueOf()){
+                console.log(user.courses[i].valueOf() === course._id.valueOf())
                 const err = new Error('Already signed to course')
                 throw(err)
             }
@@ -66,7 +67,7 @@ exports.sign = async (req, res, next) => {
         course.students.push(user._id)
         await user.save()
         await course.save()
-        res.status(201).json({...course._doc, user: user._id})
+        res.status(201).json({course})
     }catch(err){
         err.status = 400
         next(err)
@@ -76,10 +77,22 @@ exports.sign = async (req, res, next) => {
 // Get course classrooms
 exports.courseRooms = async (req, res, next) => {
     try{
-        const {_id} = req.body
-        console.log(_id)
-        const course = await db.Course.findById(_id).populate("classrooms")
-        console.log(course)
+        const {number} = req.body
+        console.log(number)
+        const course = await db.Course.findOne({number: number}).populate("classrooms")
+        res.status(201).json(course.classrooms)
+    }catch(err){
+        err.status = 400
+        next(err)
+    }
+}
+// Get course classrooms
+exports.courseRooms2 = async (req, res, next) => {
+    console.log("here")
+    try{
+        const {number} = req.body
+        console.log(number)
+        const course = await db.Course.findOne({number: number}).populate("classrooms")
         res.status(201).json(course.classrooms)
     }catch(err){
         err.status = 400
@@ -91,9 +104,9 @@ exports.courseRooms = async (req, res, next) => {
 exports.createRoom = async (req, res, next) => {
     try{
         const {id} = req.decoded
-        const {_id,name} = req.body
         const user = await db.User.findById(id)
-        const course = await db.Course.findById(_id)
+        const {number,name} = req.body
+        const course = await db.Course.findOne({number: number})
         if(user.id !== course.user.valueOf()){
             const err = new Error('You dont have permission to create new room for this course')
             throw(err)
@@ -103,9 +116,8 @@ exports.createRoom = async (req, res, next) => {
             name,
         }) //throws of exists
         course.classrooms.push(classroom._id)
-        console.log(classroom)
         await course.save()
-        res.status(201).json({...classroom._doc, course: course._id})
+        res.status(201).json({classroom})
     }catch(err){
         err.status = 400
         next(err)

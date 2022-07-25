@@ -8,14 +8,19 @@ class Homepage extends Component{
         }
         this.sign = this.handleSign.bind(this)
         this.createCourse = this.handleCreateCourse.bind(this)
+        this.test = this.handleTest.bind(this)
+    }
+
+    handleTest(e){
+        actions.getCourseRooms({number: "09876"})
     }
 
     handleCreateCourse(e){
-        console.log("Create")
+        actions.createCourse({number: "09876",name: "Ariel root sanda"})
     }
 
     handleSign(e){
-        actions.getCourses()
+        actions.sign("...") //TODO - Get course number from form
     }
 
     render(){
@@ -27,6 +32,7 @@ class Homepage extends Component{
                     <ul>
                         <li><button onClick={this.sign}>Sign to course</button></li>
                         <li><button onClick={this.createCourse}>Create course</button></li>
+                        <li><button onClick={this.test}>Self destruct</button></li>
                     </ul>
               </nav>
               <div>
