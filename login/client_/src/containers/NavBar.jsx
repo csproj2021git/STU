@@ -8,15 +8,20 @@ const NavBar = ({auth, logout}) => {
     <div className='navbar'>
         {auth.isAuthenticated && <p>Hello {auth.user.username} </p>}
         <ul>
-            <li>
-                <Link to='/register'>Register</Link>
-            </li>
-            <li>
-                <Link to='/login'>Login</Link>
-            </li>
+            {!auth.isAuthenticated && <div>
+                <li>
+                    <Link to='/register'>Register</Link>
+                </li>
+                <li>
+                    <Link to='/login'>Login</Link>
+                </li>
+                </div>
+            }
+            {auth.isAuthenticated &&
             <li>
                 <Link to='/' onClick={logout}>Logout</Link>
             </li>
+            }
         </ul>
     </div>
     )
