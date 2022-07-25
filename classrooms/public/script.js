@@ -20,6 +20,24 @@ let survey = document.getElementById('survey-form')
 let survey_button = document.getElementById('survey-form-submit-button')
 // let enlargedVideo
 
+
+window.onload = function() {
+
+  // A function to handle sending messages.
+  function sendMessage(e) {
+      // Prevent any default browser behaviour.
+      e.preventDefault();
+
+      // Send a message with the text 'Hello Treehouse!' to the new window.
+      receiver.postMessage('cookie data!', 'http://wrong-domain.com');
+  }
+
+  // Add an event listener that will execute the sendMessage() function
+  // when the send button is clicked.
+  btn.addEventListener('click', sendMessage);
+}
+
+
 const socket = io("/");
 
 var peer = new Peer(undefined, {

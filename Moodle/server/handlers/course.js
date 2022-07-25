@@ -90,18 +90,21 @@ exports.courseRooms = async (req, res, next) => {
 exports.createRoom = async (req, res, next) => {
     try{
         const {id} = req.decoded
+        const {_id,name} = req.body
         const user = await db.User.findById(id)
-        const {question, options} = req.body
-        const poll = await db.Poll.create({
-            user,
-            question,
-            options: options.map(option => ({
-                option, votes: 0
-            }))
-        })
-        user.polls.push(poll._id)
-        await user.save()
-        res.status(201).json({...poll._doc, user: user._id})
+        const course = await db.Course.findById(_id)
+        if(user.id !== course.user.valueOf()){
+            const err = new Error('You dont have permission to create new room for this course')
+            throw(err)
+        }
+        const classroom = await db.Classroom.create({
+            course,
+            name,
+        }) //throws of exists
+        course.classrooms.push(classroom._id)
+        console.log(classroom)
+        await course.save()
+        res.status(201).json({...classroom._doc, course: course._id})
     }catch(err){
         err.status = 400
         next(err)
