@@ -43,24 +43,6 @@ const [crossDomainValue, setCrossDomainValue] = useState('')
 return (<Provider store = {store}>
     <Router>
         <div>
-        <header>
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            remoteStorage.get("jwtToken", function (error, value) {
-              if(value){
-                setCrossDomainValue(value)
-                localStorage.setItem('jwtToken', value)
-              }
-            });
-          }}
-        >
-          What token is in login ?
-        </button>
-        <p>
-          Token in login: {crossDomainValue}
-        </p>
-      </header>
             <NavBar/>
             <RouteViews />
             <ErrorMessage/>

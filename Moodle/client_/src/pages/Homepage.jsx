@@ -1,9 +1,7 @@
 import React from "react";
-import Polls from "../components/Polls";
-const HomePage = (props) => (
-    <div>
-        <Polls {...props} />
-    </div>
-)
+import Homepage from "../components/Homepage";
+const HomePage = () => {
+    return(<Homepage />)
+}
 
 export default HomePage

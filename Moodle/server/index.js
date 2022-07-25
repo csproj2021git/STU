@@ -7,7 +7,7 @@ const routes = require('./routes')
 
 
 app.get('/', (req,res) => {
-    res.send("Moodle Server alive")
+    res.send("Server alive")
 })
 
 app.use(cors())
@@ -18,6 +18,6 @@ app.use(handle.errors)
 
 
 app.listen(process.env.PORT, 
-        console.log(`Server running on ${process.env.PORT}`))
+        console.log(`Moodle Server running on ${process.env.PORT}`))
 
 process.env.SECRET = handle.getSecret()
