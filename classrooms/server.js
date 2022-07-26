@@ -81,6 +81,7 @@ app.post('/upload/:room',(req,res) => {
   if (req.files) {
     var file = req.files.file
     var filename = file.name
+    console.log(__dirname + '/uploads' + "-" + req.params.room + "/" + filename)
     file.mv(__dirname + '/uploads' + '/uploads' + "-" + req.params.room + "/" + filename, function(err) {
       if (err) {
         res.send(err)
@@ -118,6 +119,26 @@ app.get('/download/:room/:fileName',(req,res) => {
 
 io.on("connection", (socket) => { // todo change to async>??
   console.log("Connection")
+  socket.on("check-courses", async (jwt_raw, jwt_decoded, roomId)=> {
+    let list_of_classrooms = []
+    try {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${jwt_raw}`
+      const user_courses = await axios.get('http://localhost:7001/api/course/user')
+      user_courses.data.forEach(course => {
+        if (typeof course.classrooms !== 'undefined') {
+          list_of_classrooms = list_of_classrooms.concat(course.classrooms)
+        }
+
+      })
+      if (list_of_classrooms.indexOf(roomId) === -1) {
+        io.to(socket.id).emit("redirect", 'http://localhost:5000')
+        socket.disconnect()
+      }
+    } catch (err) {
+      io.to(socket.id).emit("redirect", 'http://localhost:5000')
+      socket.disconnect()
+    }
+  })
   socket.on("join-room", (roomId, userId, shareId, userName) => {
     // console.log(io.sockets.adapter.rooms.get(roomId).currentShare)
     console.log("join room")
@@ -125,12 +146,16 @@ io.on("connection", (socket) => { // todo change to async>??
     if (typeof io.sockets.adapter.rooms.get(roomId).disabledShares === 'undefined') {
       io.sockets.adapter.rooms.get(roomId).disabledShares = [] // todo - 24/6 - change to array cause this isnt serializable
     }
+    if (typeof io.sockets.adapter.rooms.get(roomId).triples === 'undefined') {
+      io.sockets.adapter.rooms.get(roomId).triples = [] // todo - 24/6 - change to array cause this isnt serializable
+    }
+    io.sockets.adapter.rooms.get(roomId).triples.push([userId, userName, socket.id])
     io.to(socket.id).emit("update-sharer", roomId, io.sockets.adapter.rooms.get(roomId).currentShare,
-        io.sockets.adapter.rooms.get(roomId).disabledShares); // todo continue this transition on script.js - check if that is the right roomId, cause every client can be on few zooms. and then try to call, get rejected, and get called back by the sharer.
-    socket.broadcast.to(roomId).emit("user-connected", userId); // emit the event from the server to the rest of the users in specific room
+        io.sockets.adapter.rooms.get(roomId).disabledShares, io.sockets.adapter.rooms.get(roomId).triples); // todo continue this transition on script.js - check if that is the right roomId, cause every client can be on few zooms. and then try to call, get rejected, and get called back by the sharer.
+    socket.broadcast.to(roomId).emit("user-connected", userId, userName, socket.id); // emit the event from the server to the rest of the users in specific room
     socket.on("message", (message, name) => {
       let new_date = new Date();
-      var time_rn =
+      let time_rn =
           ("0" + new_date.getHours()).slice(-2) +
           ":" +
           ("0" + new_date.getMinutes()).slice(-2) +
@@ -143,6 +168,23 @@ io.on("connection", (socket) => { // todo change to async>??
       io.sockets.adapter.rooms.get(roomId).currentShare = activeShareId
       socket.broadcast.to(roomId).emit("user-sharing", activeShareId, socket.id);
     });
+
+    socket.on("mute-video", (socket_id) => {
+      io.to(socket_id).emit("mute-your-video")
+    })
+    socket.on("mute-audio", (socket_id) => {
+      io.to(socket_id).emit("mute-your-audio")
+    })
+    socket.on("private-message", (socket_id, private_msg, sender_name) => {
+      let new_date = new Date();
+      let time_rn =
+          ("0" + new_date.getHours()).slice(-2) +
+          ":" +
+          ("0" + new_date.getMinutes()).slice(-2) +
+          ":" +
+          ("0" + new_date.getSeconds()).slice(-2);
+      io.to(socket_id).emit("private-message", private_msg, sender_name, time_rn)
+    })
 
     socket.on("re-share", (roomId, activeShareId) => {
       io.sockets.adapter.rooms.get(roomId).currentShare = activeShareId
@@ -159,14 +201,6 @@ io.on("connection", (socket) => { // todo change to async>??
 
 
     socket.on("disconnect", () => { // Will it disconnect from every room he is involved?? how will it know which room
-      // delete directory recursively
-      try {
-        fs.rmdirSync("uploads", { recursive: true });
-        console.log("Directory has been deleted!")
-
-      } catch (err) {
-        console.error('Error while deleting');
-      }
       socket.broadcast.to(roomId).emit("share-disconnected", shareId)
       socket.broadcast.to(roomId).emit("user-disconnected", userId, userName);
     });
@@ -176,22 +210,42 @@ io.on("connection", (socket) => { // todo change to async>??
       user_file = ui
     })
 
-    socket.on("drowsiness-check",(roomId, OriginID) => {
-      io.to(roomId).emit("upload-frame");
+    socket.on("drowsiness-check",(roomId, OriginID, counter) => {
+      io.to(roomId).emit("upload-frame", socket.id, counter);
       console.log("drowsiness-check")
     })
 
     socket.on("call-to-me", (callThisUserId, shareSocketId) => {
       io.to(shareSocketId).emit("call-this", roomId, callThisUserId);
     })
-    socket.on("data-url", async (roomId, userId, dataUrl) => {
+
+    socket.on("data-url", async (roomId, userId, dataUrl, socketId_drowsiness, counter) => {
       console.log("in data url in server")
       try {
-        const resp = await axios.post('http://localhost:5000', {imgBase64: dataUrl, userId: userId})
-        console.log(resp.data)
+        let resp = await axios.post('http://localhost:6000', {imgBase64: dataUrl, userId: userId})
+        io.to(socketId_drowsiness).emit("awake-percentage", resp.data.userId, resp.data.awake, counter)
       } catch (err) {
         console.error(err)
       }
+    })
+
+    socket.on("post-survey", async (roomId, userId, jsonSurvey, name) => {
+      console.log("in post-survey in server")
+      try {
+        let resp = await axios.post('http://localhost:4001/api/polls/',
+            {question: jsonSurvey.question, options: jsonSurvey.options})
+        let new_date = new Date();
+        let time_rn =
+            ("0" + new_date.getHours()).slice(-2) +
+            ":" +
+            ("0" + new_date.getMinutes()).slice(-2) +
+            ":" +
+            ("0" + new_date.getSeconds()).slice(-2);
+        io.to(roomId).emit("post-chat-survey", name, 'http://localhost:4000/poll/' + String(resp.data._id), jsonSurvey.question, time_rn);
+      } catch (err) {
+        console.error(err)
+      }
+
     })
 
 

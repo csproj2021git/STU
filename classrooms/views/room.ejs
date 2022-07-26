@@ -28,44 +28,43 @@
          <div class="main_controls">
             <div class="main_controls_block">
                <div onclick="muteUnmute()" class="main_controls_button main_mute_button">
-                  <i></i>
+                  <img src="sound.png"/>
                   <span>Mute</span>
                </div>
                <div onclick="playStop()" class="main_controls_button main_video_button" >
-                  <i></i>
+                  <img src="pause_video.png"/>
                   <span>Stop Video</span>
                </div>
             </div>
             <div class="main_controls_block">
-               <div onclick="drowsinessButtonClicked()" class="main_controls_button">
-                  <i></i>
+               <div onclick="drowsinessButtonClicked()" class="main_controls_button" id="main_control_drowsiness">
+                  <img src="drowsiness_check.png"/>
                   <span>Drowsiness Check</span>
                </div>
-               <div class="main_controls_button">
-                  <i></i>
+               <div onclick="participantsOnOff()" class="main_controls_button">
+                  <img src="participants.png"/>
                   <span>Participants</span>
                </div>
                <div onclick="chatOnChatOff()" class="main_controls_button main_chat_button">
-                  <i></i>
+                  <img src="chat.png"/>
                   <span>Chat</span>
                </div>
                <div onclick="shareButtonClicked()" class="main_controls_button ">
-                  <i></i>
+                  <img src="share_screen.png"/>
                   <span class="sharescreen">Share Screen</span>
                </div>
-               <div onclick="surveyButtonClicked()" class="main_controls_button ">
-                  <i></i>
+               <div onclick="surveyButtonClicked()" class="main_controls_button" id="main_control_survey">
+                  <img src="polls.png"/>
                   <span class="surveys">Surveys</span>
                </div>
                <div onclick="fileButtonClicked()" class="main_controls_button ">
+                  <img src="upload_files.png"/>
                   <span class="file-upload">Upload files</span>
                </div>
                <div onclick="showFiles()" class="main_controls_button ">
+                  <img src="download_files.png"/>
                   <span class="files-download">Download files</span>
                </div>
-<!--               <div onclick="stopShareButtonClicked()" class="main_controls_button">-->
-<!--                  <span class="stop-share-screen" style="color: red; visibility: hidden">Stop Sharing</span>-->
-<!--               </div>-->
             </div>
             <div onclick="leavingMeetingButtonClicked()" class="main_controls_block">
                <div class="main_controls_button">
@@ -91,6 +90,10 @@
      <span class="dc_msg_itself">
      </span>
    </div>
+   <div class="awake_message">
+     <span class="dc_msg_itself">
+     </span>
+   </div>
    <div class="enter-name" id="enter-name">
       <span id="enter-name-text">Enter your name:</span>
       <br>
@@ -98,18 +101,26 @@
       <button class="enter-name-button" id="name-button">Enter</button>
    </div>
    <div class="survey-form" id="survey-form">
-      <form>
       <span class="survey-form-text">Enter your poll:</span>
       <br>
-      <input class="survey-form-question" type="text" id="name-input" required>
+      <input class="survey-form-question" type="text" id="survey-form-question" required>
       <br>
       <span class="survey-form-text">Enter your options:</span>
       <br>
-      <input class="survey-form-option" type="text" required>
-      <button class="survey-form-add-options" id="survey-form-add-options">Add more options</button>
+      <input class="survey-form-option survey-form-last-input" type="text" required>
+      <button onclick="addMoreOptions()" class="survey-form-add-options" id="survey-form-add-options">Add more options</button>
       <br>
-      <button type="submit" class="survey-form-submit-button" id="survey-form-submit-button">Create Form!</button>
-      </form>
+      <button onclick="disappear_form()" class="survey-form-submit-button" id="survey-form-submit-button">Create Form!</button>
+   </div>
+   <div class="participants-popup" id="participants-popup">
+      <!-- For each member - add a button to mute - audio or video, and name, and private message sending. -->
+   </div>
+   <div class="participants-popup" id="private-message-popup">
+      <input type="text" id="private-message-input">
+      <button onclick="sendPrivateMessage()" class="send-pm">Send Private Message</button>
+      <br>
+      <button onclick="cancelPrivateMessage()" class="cancel-pm">Cancel</button>
+      <input type="hidden" id="pm-address" value="">
    </div>
    <div class="upload_file_message">
      <span class="upload_msg">

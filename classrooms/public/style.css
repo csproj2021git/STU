@@ -71,7 +71,6 @@ video {
     flex: 0.8;
     display: flex;
     flex-direction: column;
-
 }
 
 .main_right {
@@ -114,6 +113,7 @@ video {
 }
 
 .chat_message {
+    width: 90%;
     background-color: #242324;
     border-radius: 10px;
     border-color: white;
@@ -179,6 +179,20 @@ li {
     text-align: center;
 }
 
+.awake_message {
+    padding: 5px 10px;
+    width: auto;
+    height: auto;
+    top: 10px;
+    border-radius: 4px;
+    border-right: 8px solid rgb(101, 0, 168);
+    background: #90f;
+    opacity: 0.9;
+    position: absolute;
+    visibility: hidden;
+    text-align: center;
+}
+
 .share-screen{
     color: green;
 }
@@ -192,7 +206,7 @@ li {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 .styled-table thead tr {
-    background-color: #4f0098;
+    background-color: #009879;
     color: #ffffff;
     text-align: center;
 }
@@ -221,19 +235,17 @@ li {
 .h1-upload {
     font-family: Garamond, SansSerif, serif;
     text-align: center;
-    background-color: #3d0098;
+    background-color: #009879;
     color: #ffffff;
 
 }
 .chooseButton{
-    font-family: Garamond, SansSerif, serif;
+    border-radius: 4px;
     text-align: center;
     font-size: 25px;
     font-weight: bold;
-    width: 130px;
-    height: 50px;
-
-    margin-left: 10px;
+    width: 400px;
+    height: 90px;
     margin-top: 50px;
 }
 
@@ -246,36 +258,21 @@ li {
     width: 130px;
     height: 50px;
     transition: all 0.5s;
-    margin-left: 200px;
+    margin-left: 100px;
     margin-top: 50px;
-    visibility: hidden;
 }
 
-
-.body-page{
-    background-image: url("back.jpg");
+.body-page {
+    background-image: linear-gradient(to right, #009879, white);
 }
-
-
 .label{
-    margin-left:380px;
-    color: white;
+    margin-left:260px;
 }
 
 .download-button{
     font-family: Garamond, SansSerif, serif;
     font-size: 25px;
 }
-
-button:hover,
-button:focus,
-input:hover,
-input:focus {
-    background-color: #5c0199;
-    color: white;
-}
-
-
 
 .survey-form{
     width: fit-content;
@@ -292,14 +289,32 @@ input:focus {
     transition: transform 0.4s, bottom 0.4s;
 }
 
-.open-survey-form{
+.open-survey-form {
     visibility: visible;
     top: 50%;
     transform: translate(-50%, -50%) scale(1);
 }
 
+.participants-popup {
+    width: 250px;
+    height: 250px;
+    background: rgb(97, 0, 255);
+    border-radius: 6px;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.1);
+    text-align: center;
+    padding: 15px 35px;
+    visibility: hidden;
+    transition: transform 0.4s, bottom 0.4s;
+}
 
-
+.open-participants-popup {
+    visibility: visible;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1);
+}
 
 .enter-name{
     width: fit-content;
@@ -353,11 +368,23 @@ input:focus {
     background-color: red;
 }
 
-/*html {*/
-/*    background: black; <!-- To make the entire background black -->*/
-/*}*/
+html {
+    background: black; <!-- To make the entire background black -->
+}
 
 body {
     margin: 0 !important; <!-- A work around to not having margins at top and bottom -->
     padding: 0 !important;
+}
+
+.tab {
+    display: inline-block;
+    margin-left: 40px;
+}
+
+.cancel-pm{
+    background-color: red;
+}
+.send-pm{
+    background-color: lightgreen;
 }
