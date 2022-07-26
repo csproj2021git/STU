@@ -206,7 +206,7 @@ li {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 .styled-table thead tr {
-    background-color: #009879;
+    background-color: #4f0098;
     color: #ffffff;
     text-align: center;
 }
@@ -235,17 +235,19 @@ li {
 .h1-upload {
     font-family: Garamond, SansSerif, serif;
     text-align: center;
-    background-color: #009879;
+    background-color: #3d0098;
     color: #ffffff;
 
 }
 .chooseButton{
     border-radius: 4px;
     text-align: center;
+    font-family: Garamond, SansSerif, serif;
     font-size: 25px;
     font-weight: bold;
-    width: 400px;
-    height: 90px;
+    width: 130px;
+    height: 50px;
+    margin-left: 10px;
     margin-top: 50px;
 }
 
@@ -258,15 +260,17 @@ li {
     width: 130px;
     height: 50px;
     transition: all 0.5s;
-    margin-left: 100px;
+    margin-left: 330px;
     margin-top: 50px;
+    visibility: hidden;
 }
 
 .body-page {
-    background-image: linear-gradient(to right, #009879, white);
+    background-image: url("back.jpg");
 }
 .label{
-    margin-left:260px;
+    margin-left:440px;
+    color: white;
 }
 
 .download-button{
@@ -368,9 +372,15 @@ li {
     background-color: red;
 }
 
-html {
-    background: black; <!-- To make the entire background black -->
+button:hover,
+button:focus,
+input:hover,
+input:focus {
+    background-color: #5c0199;
+    color: white;
 }
+
+
 
 body {
     margin: 0 !important; <!-- A work around to not having margins at top and bottom -->
