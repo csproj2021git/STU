@@ -71,6 +71,7 @@ export const vote = (id,data) => {
             const poll = await api.call('post', `polls/${id}`, data)
             dispatch(setCurrentPoll(poll))
             dispatch(removeError())
+            window.location.reload()
         }catch (err){
             const error = err.response.data
             dispatch(addError(error.err))

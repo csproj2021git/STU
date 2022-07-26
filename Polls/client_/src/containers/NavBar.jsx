@@ -6,25 +6,25 @@ import {logout} from '../store/actions'
 const NavBar = ({auth, logout}) => {
     return(
     <div className='navbar'>
-        {auth.isAuthenticated && <p>Hello {auth.user.username} </p>}
+        {auth.isAuthenticated && <label>Hello {auth.user.username} </label>}
         <ul>
             {!auth.isAuthenticated &&<div>
-            <li>
-                <Link to='/register'>Register</Link>
-            </li>
-            <li>
-                <Link to='/login'>Login</Link>
-            </li>
+            <label>
+                <Link className="link"style={{ textDecoration: 'none' }} to='/register'>Register</Link>&emsp;&emsp;
+            </label>
+            <label>
+                <Link className="link" style={{ textDecoration: 'none' }} to='/login'>Login</Link>&emsp;&emsp;
+            </label>
             </div>
             }
             {auth.isAuthenticated &&
             <div>
-            <li>
-                <Link to='/poll/new'>Create poll</Link>
-            </li>
-            <li>
-                <Link to='/' onClick={logout}>Logout</Link>
-            </li>
+                 <label>
+                <Link className="link" style={{ textDecoration: 'none' }} to='/poll/new'>Create poll</Link>&emsp;&emsp;
+                </label>
+            <label>
+                <Link className="link" style={{ textDecoration: 'none' }} to='/' onClick={logout}>Logout</Link>&emsp;&emsp;
+            </label>
             </div>
             }
         </ul>

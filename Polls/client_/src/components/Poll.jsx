@@ -20,9 +20,9 @@ const Poll = ({poll, auth, vote}) => {
     }
     return (
         <div>
-            <h3>{poll.question}</h3>
-            <div>{answers}</div>
-            <div>{data}</div> 
+            <label>Question: <br></br><br></br>{poll.question}<br></br><br></br></label>
+            <div><label>Answers: <br></br><br></br>{answers}</label></div>
+            <div><br></br><br></br>{data}</div> 
         </div>
     )
 }

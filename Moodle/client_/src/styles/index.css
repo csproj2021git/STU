@@ -1,98 +1,186 @@
-*{
-    padding: 0;
-    margin: 0;
-    font-family: 'Josefin Sans', sans-serif;
-    box-sizing: border-box;
-    color: white;
+ 
+body {
+    background-image: url("/public/back.jpg");
+    color: #9900ff 
 }
-.hero{
-    height: 100vh;
-    width: 100%;
-    background-image: url(background.jpg);
-    background-size: cover;
-    background-position: center;
-}
-nav{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: 45px;
-    padding-left: 8%;
-    padding-right: 8%;
-}
-.logo{
-    color: white;
-    font-size: 35px;
-    letter-spacing: 1px;
-    cursor: pointer;
-}
-span{
-    color: #f9004d;
-}
-nav ul li{
-    list-style-type: none;
-    display: inline-block;
-    padding: 10px  25px;
-}
-nav ul li a{
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    text-transform: capitalize;
-}
-nav ul li a:hover{
-    color: #f9004d;
-    transition: .4s;
-}
-.btn{
-    background-color:#f9004d;
-    color: white;
-    text-decoration: none;
-    border: 2px solid transparent;
-    font-weight: bold;
-    padding: 10px 25px;
-    border-radius: 30px;
-    transition: transform .4s;
-}
-.btn:hover{
-    transform: scale(1.2);
-}
-.content{
-    position: absolute;
-    top: 30%;
-    left:8%;
-    transform: translateY(-50%);
+label{
+    font-size: 30px;
+    font-family: cursive;
+    text-shadow: 2px 2px #242424;
 }
 
-
-button{
-    background-color:#f9004d;
-    color: white;
-    text-decoration: none;
-    border: 2px solid transparent;
-    font-weight: bold;
-    padding: 13px 30px;
-    border-radius: 30px;
-    transition: .4s;
-}
-button:hover{
-    background-color: transparent;
-    border: 2px solid #f9004d;
-    cursor: pointer;
+label:active{
+    color:#242424
 }
 
-.title h2{
-    color: white;
-    font-size: 75px;
-    width: 1130px;
-    margin: 30px auto;
+div{
     text-align: center;
-}
+ }
+ link,
+  button{
+    align-items: center;
+    background-color: #9900ff;
+    border: 0;
+    border-radius: 100px;
+    box-sizing: border-box;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-flex;
+    font-family: -apple-system, system-ui, system-ui, "Segoe UI", Roboto, "Helvetica Neue", "Fira Sans", Ubuntu, Oxygen, "Oxygen Sans", Cantarell, "Droid Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Lucida Grande", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    justify-content: center;
+    line-height: 20px;
+    max-width: 480px;
+    min-height: 40px;
+    min-width: 0px;
+    overflow: hidden;
+    padding: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+    text-align: center;
+    touch-action: manipulation;
+    transition: background-color 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s, box-shadow 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s, color 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+    user-select: none;
+    -webkit-user-select: none;
+    vertical-align: middle;
+  }
+  .link,
+  .poll{
+    align-items: center;
+    background-color: #242424;
+    border: 0;
+    border-radius: 100px;
+    box-sizing: border-box;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-flex;
+    font-family: -apple-system, system-ui, system-ui, "Segoe UI", Roboto, "Helvetica Neue", "Fira Sans", Ubuntu, Oxygen, "Oxygen Sans", Cantarell, "Droid Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Lucida Grande", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    justify-content: center;
+    line-height: 20px;
+    max-width: 480px;
+    min-height: 40px;
+    min-width: 0px;
+    overflow: hidden;
+    padding: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+    text-align: center;
+    touch-action: manipulation;
+    transition: background-color 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s, box-shadow 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s, color 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+    user-select: none;
+    -webkit-user-select: none;
+    vertical-align: middle;
+  }
 
-.courses_list{
-
-}
-
-.h2{
+  input{
+    box-shadow: 1px -1px 1px 10px  #1d1c1c;
+    align-items: center;
+    background: transparent;
+    border: none;
+    border: 0;
+    border-radius: 100px;
+    box-sizing: border-box;
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-flex;
+    font-family: -apple-system, system-ui, system-ui, "Segoe UI", Roboto, "Helvetica Neue", "Fira Sans", Ubuntu, Oxygen, "Oxygen Sans", Cantarell, "Droid Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Lucida Grande", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    justify-content: center;
+    line-height: 20px;
+    max-width: 480px;
+    min-height: 40px;
+    min-width: 0px;
+    overflow: hidden;
+    padding: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+    text-align: center;
+    touch-action: manipulation;
+    transition: background-color 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s, box-shadow 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s, color 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+    user-select: none;
+    -webkit-user-select: none;
+    vertical-align: middle;
+  }
+  
+  button:hover,
+  button:focus,
+  input:hover,
+  input:focus { 
+    background-color: #5c0199;
     color: white;
+  }
+
+.link:hover,.link:focus,
+.poll:hover,.poll:focus { 
+    background-color: #383838;
+    color: white;
+  }
+
+  input:active,
+  button:active,
+  .poll:hover, .poll:focus {
+    background: #4b007c;
+    color: rgb(255, 255, 255, .7);
+  }
+
+  .link:active,
+  .poll:active
+  {
+    background: #242424;
+    color: rgb(255, 255, 255, .7);
+  }
+
+  .link:disabled
+  input:disabled,
+  button:disabled { 
+    cursor: not-allowed;
+    background: rgba(0, 0, 0, .08);
+    color: rgba(0, 0, 0, .3);
+  }
+
+  .errorMessage{
+    color: red;
+  }
+
+  /* width of all scrollbars */
+::-webkit-scrollbar {
+  width: 0.75em;
 }
+
+/* shape of track [circular in the ends] and change of color */
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 100vw;
+  margin-block: 0.5em;
+}
+/* color of the scrollbar-thumb [the thing you actually scroll up and down] */
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+          to bottom,
+          hsl(276, 100%, 50%) 0%,
+          hsla(0, 0%, 100%, 0) 60%,
+          hsla(0, 0%, 0%, 0) 50%,
+          hsl(276, 100%, 50%) 100%
+  ),
+  linear-gradient(to right, hsl(0, 100%, 50%) 0%, hsla(0, 0%, 50%, 0) 100%);
+  border-radius: 100vw;
+  border: 0.25em solid hsl(300 1% 14% / 1);
+}
+
+/* style change when hover */
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+          to bottom,
+          hsl(276, 100%, 35%) 0%,
+          hsla(0, 0%, 100%, 0) 60%,
+          hsla(0, 0%, 0%, 0) 50%,
+          hsl(276, 100%, 35%) 100%
+  ),
+  linear-gradient(to right, hsl(325, 100%, 66%) 80%, hsla(0, 0%, 50%, 0) 100%);
+}
+  
+  

@@ -39,7 +39,6 @@ if(localStorage.jwtToken){
 }
 
 const App = () => {
-const [crossDomainValue, setCrossDomainValue] = useState('')
 return (<Provider store = {store}>
     <Router>
         <div>

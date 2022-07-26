@@ -26,15 +26,25 @@ class Auth extends Component{
 
     render(){
         const {username, password} = this.state
+        const {authType} = this.props
         return(
         <div>
+            <br></br><br></br><br></br><br></br>
+            {authType == "login" ? <label>Login</label> : <label>Register</label>}
             <form onSubmit={this.handleSubmit}>
-                <label htmlFor="username">username</label>
+                <br></br><br></br>
+                <label htmlFor="username">Username</label>
+                <br></br><br></br>
                 <input type="text" value={username} name="username" onChange={this.handleChange} autoComplete="off"></input>
-                <label htmlFor="password">password</label>
+                <br></br><br></br>
+                <label htmlFor="password">Password</label>
+                <br></br><br></br>
                 <input type="password" value={password} name="password" onChange={this.handleChange} autoComplete="off"></input>
+                <br></br><br></br><br></br>
                 <button>submit</button>
+                <br></br><br></br><br></br>
             </form>
+            
         </div>
         )
     }

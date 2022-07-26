@@ -46,7 +46,7 @@ return(<Provider store = {store}>
         <div>
             <NavBar/>
             <RouteViews />
-            <ErrorMessage/>
+            <ErrorMessage className = "errorMessage"/>
         </div>
     </Router>
 </Provider>)

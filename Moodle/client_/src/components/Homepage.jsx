@@ -45,27 +45,15 @@ class Homepage extends Component{
     render(){
         return(
             <div className="hero">
-            <title>STU Moodle</title>
               <nav>
-              <h2 className="logo">Moodle<span>STU</span></h2>
+              <label id="name">Hello {this.state.username} </label>
                     <ul>
-                        <li><button onClick={this.sign}>Sign to course</button></li>
-                        <li><button onClick={this.createCourse}>Create course</button></li>
-                        <li><button onClick={this.test}>Self destruct</button></li>
-                        <li><button onClick={(this.getCourses)}>My courses</button></li>
+                        <label><button className="link"onClick={this.sign}>Sign to course</button></label>&emsp;&emsp;
+                        <label><button className="link" onClick={this.createCourse}>Create course</button></label>&emsp;&emsp;
+                        <label><button className="link" onClick={this.test}>Self destruct</button></label>&emsp;&emsp;
+                        <label><button className="link" onClick={(this.getCourses)}>My courses</button></label>&emsp;&emsp;
                     </ul>
               </nav>
-              <div>
-              <div className="content">
-                        <h2 className="Student_details"> Student details:</h2>
-                        <ul id="coursesList">
-                            <li id="name">Name: {this.state.username} </li>
-                        </ul>
-                        <ul>
-                            <li id="adfadf">Courses: {this.state.courses} </li>
-                        </ul>
-                    </div>
-              </div>
             </div>
         )
     }
