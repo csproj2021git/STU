@@ -10,8 +10,15 @@
     <h1 class="h1-upload">File Upload</h1>
     <form method="POST" action="/upload/<%= roomId %>" enctype="multipart/form-data">
         <label class="label" for="myfile">Select a file:
-        <input class="chooseButton" type="file" id="myfile" name="file"/></label>
-        <input class="uploadButton" type="submit" value="upload"/>
+        <input onclick="changeVisible()" class="chooseButton" type="file" id="myfile" name="file"/></label>
+        <input class="uploadButton" type="submit" value="upload" id="upload"/>
     </form>
+    <script>
+        changeVisible= ()=> {
+            setTimeout(()=>{
+                document.getElementById("upload").style.visibility = "visible"
+            }, 1000)
+        }
+    </script>
 </body>
 </html>
