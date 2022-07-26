@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, 
         ref:"Poll",
     }],
+	course:[{
+        type: mongoose.Schema.Types.ObjectId, 
+        ref:"Course",
+    }],
 })
 
 // Before saving to DB - hash the password
