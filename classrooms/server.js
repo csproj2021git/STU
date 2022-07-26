@@ -130,6 +130,7 @@ io.on("connection", (socket) => { // todo change to async>??
         }
 
       })
+      console.log(list_of_classrooms)
       if (list_of_classrooms.indexOf(roomId) === -1) {
         io.to(socket.id).emit("redirect", 'http://localhost:5000')
         socket.disconnect()
