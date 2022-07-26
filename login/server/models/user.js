@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, 
         ref:"Poll",
     }],
-	course:[{
+	courses:[{
         type: mongoose.Schema.Types.ObjectId, 
         ref:"Course",
     }],
