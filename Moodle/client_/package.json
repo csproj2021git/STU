@@ -26,7 +26,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "dev:dependencies": "npm install",
+    "dev:start": "npm start",
+    "dev": "npm run dev:dependencies && npm run dev:start"
   },
   "eslintConfig": {
     "extends": [
