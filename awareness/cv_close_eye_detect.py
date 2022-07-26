@@ -12,8 +12,10 @@ import matplotlib.pyplot as plt
 model_new = tf.keras.models.load_model("bestModel.h5")
 app = Flask(__name__)
 
-eye_cascPath = 'D:\Chrome Downloads\project open eye\Closed-Eye-Detection-with-opencv-master/haarcascade_eye_tree_eyeglasses.xml'  #eye detect model
-face_cascPath = 'D:\Chrome Downloads\project open eye\Closed-Eye-Detection-with-opencv-master/haarcascade_frontalface_alt.xml'  #face detect model
+eye_cascPath = os.getcwd() + '\haarcascade_eye_tree_eyeglasses.xml'  #eye detect model
+face_cascPath = os.getcwd() + '\haarcascade_frontalface_alt.xml'  #face detect model
+print(eye_cascPath)
+print(face_cascPath)
 faceCascade = cv2.CascadeClassifier(face_cascPath)
 eyeCascade = cv2.CascadeClassifier(eye_cascPath)
 
