@@ -880,7 +880,9 @@ const fillParticipantsPopup = () => {
     })
     participants_popup.appendChild(participant_div)
     participant_div.appendChild(participant_name_span)
-    insertAfter(participant_name_span, participant_mute_button)
+    insertAfter(participant_name_span, participant_mute_video_button)
+    insertAfter(participant_name_span, participant_mute_audio_button)
+    insertAfter(participant_name_span, participant_private_message)
     insertAfter(participant_name_span, tab_span)
     if (triplet[0] !== ID) { // It's another participant
 
