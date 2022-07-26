@@ -130,7 +130,7 @@ class Homepage extends Component{
     render(){
         const {signCourseNumber ,createCourseNumber, createCourseName, createClassroomName} = this.state
         const courses = this.state.courses.map(course => {return (<button id={course.number} onClick={() => this.courseClick(course.number, course.user)}>{`${course.name} ${course.number}`}</button>)} )
-        const rooms = this.state.rooms.map(room => {return (<button className="link"id={room._id} onClick={() => {window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley"}}>{`${room.name}`}</button>)} )
+        const rooms = this.state.rooms.map(room => {return (<button className="link"id={room._id} onClick={() => {window.location.href = `http://localhost:3030/${room._id}`}}>{`${room.name}`}</button>)} )
         return(
             <div className="hero">
               <nav>
