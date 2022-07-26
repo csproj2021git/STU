@@ -28,7 +28,8 @@ remoteStorage.get("jwtToken", function (error, value) {
 
 //When turning on app, it will check if user already logged in
 if(localStorage.jwtToken){
-    username = decode(localStorage.jwtToken).username
+    username = decode(localStorage.jwtToken)
+    console.log(username)
     setToken(localStorage.jwtToken)
 }
 

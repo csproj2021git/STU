@@ -16,7 +16,8 @@ label:active{
 div{
     text-align: center;
  }
- link,
+
+ 
   button{
     align-items: center;
     background-color: #9900ff;
@@ -182,5 +183,19 @@ div{
   ),
   linear-gradient(to right, hsl(325, 100%, 66%) 80%, hsla(0, 0%, 50%, 0) 100%);
 }
+
+.errorMessage{
+  color: red;
+  font-size: 20px;
+  font-family: cursive;
+  text-shadow: 2px 2px #242424;
+}
   
+
+.successMessage{
+  color: green;
+  font-size: 20px;
+  font-family: cursive;
+  text-shadow: 2px 2px #242424;
+}
   
