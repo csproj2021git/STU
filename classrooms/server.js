@@ -81,7 +81,6 @@ app.post('/upload/:room',(req,res) => {
   if (req.files) {
     var file = req.files.file
     var filename = file.name
-    console.log(__dirname + '/uploads' + "-" + req.params.room + "/" + filename)
     file.mv(__dirname + '/uploads' + '/uploads' + "-" + req.params.room + "/" + filename, function(err) {
       if (err) {
         res.send(err)
@@ -160,6 +159,14 @@ io.on("connection", (socket) => { // todo change to async>??
 
 
     socket.on("disconnect", () => { // Will it disconnect from every room he is involved?? how will it know which room
+      // delete directory recursively
+      try {
+        fs.rmdirSync("uploads", { recursive: true });
+        console.log("Directory has been deleted!")
+
+      } catch (err) {
+        console.error('Error while deleting');
+      }
       socket.broadcast.to(roomId).emit("share-disconnected", shareId)
       socket.broadcast.to(roomId).emit("user-disconnected", userId, userName);
     });

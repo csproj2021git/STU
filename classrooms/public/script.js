@@ -114,8 +114,6 @@ Promise.all([ID_PROMISE, ID_SHARE_PROMISE, NAME_PROMISE]).then((values) => {
 })
 
 
-
-
 navigator.mediaDevices.getUserMedia({
   // access to the devices
   // video: true,
@@ -146,7 +144,6 @@ navigator.mediaDevices.getUserMedia({
   console.log("Got user media")
   myVideoStream = stream;
   addVideoStream(myVideo, stream, ID); // add my video stream
-
 
   socket.on("createMessage", (message, time_rn, name) => {
     $("ul").append(`
@@ -203,7 +200,6 @@ navigator.mediaDevices.getUserMedia({
       invisibleVideo(v)
     }
   })
-
 
   socket.on("user-re-sharing", (shareId) => { // todo simplify?
     globalDisabledShares = globalDisabledShares.filter(e => e !== shareId)
@@ -262,6 +258,7 @@ navigator.mediaDevices.getUserMedia({
     let dataUrl = canvas.toDataURL("image/png")
     socket.emit("data-url", ROOM_ID, ID, dataUrl)
   })
+
 });
 
 // display the user that disconnected:
@@ -619,13 +616,6 @@ const drowsinessButtonClicked = () => {
   // console.log("after ajax")
   // // console.log(jpegFile)
 }
-
-// // stop share:
-// const stopShareButtonClicked = () => {
-//   socket.emit("end-share", ROOM_ID, firstShare[0])
-//   // myShareStream.getVideoTracks()[0].enabled = false;
-//   video_element.remove();
-// }
 
 function defaultVideoSize(elem) {
   elem.style.objectFit = 'fill'
